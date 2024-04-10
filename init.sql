@@ -1,0 +1,3 @@
+CREATE USER root;
+CREATE DATABASE leasing_db;
+GRANT ALL PRIVILEGES ON DATABASE leasing_db TO root;

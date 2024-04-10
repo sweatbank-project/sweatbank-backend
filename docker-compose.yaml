@@ -6,12 +6,16 @@ services:
       dockerfile: "Dockerfile"
     ports:
       - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_started
   postgres:
     image: postgres:latest
     ports:
       - "5432:5432"
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Create database when container is run. More info at https://hub.docker.com/_/postgres
     environment:
       - POSTGRES_PASSWORD=leasers
       - POSTGRES_USER=guest
