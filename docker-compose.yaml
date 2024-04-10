@@ -6,3 +6,28 @@ services:
       dockerfile: "Dockerfile"
     ports:
       - "8080:8080"
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=leasers
+      - POSTGRES_USER=guest
+      - POSTGRES_DB=leasing_db
+  postgres-pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "test1234"
+    ports:
+      - "8888:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
