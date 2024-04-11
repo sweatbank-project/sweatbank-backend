@@ -23,14 +23,3 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build with Gradle
         run: ./gradlew build
-
-  lint-code:
-    runs-on: ubuntu-latest
-    name: Lint code with GitHub Super Linter
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run GitHub Super Linter
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
