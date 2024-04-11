@@ -20,8 +20,9 @@ services:
       - POSTGRES_PASSWORD=leasers
       - POSTGRES_USER=guest
       - POSTGRES_DB=leasing_db
+      - PGUSER=guest
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "leasing_db"]
+      test: ["CMD-SHELL", "pg_isready -d leasing_db -U guest"]
       interval: 10s
       timeout: 5s
       retries: 3
