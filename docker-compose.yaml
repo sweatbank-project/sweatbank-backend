@@ -6,16 +6,26 @@ services:
       dockerfile: "Dockerfile"
     ports:
       - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
   postgres:
     image: postgres:latest
     ports:
       - "5432:5432"
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Create database when container is run. More info at https://hub.docker.com/_/postgres
     environment:
       - POSTGRES_PASSWORD=leasers
       - POSTGRES_USER=guest
       - POSTGRES_DB=leasing_db
+      - PGUSER=guest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d leasing_db -U guest"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   postgres-pgadmin:
     image: dpage/pgadmin4
     environment:
