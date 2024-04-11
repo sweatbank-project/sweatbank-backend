@@ -8,7 +8,7 @@ services:
       - "8080:8080"
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
   postgres:
     image: postgres:latest
     ports:
@@ -20,6 +20,11 @@ services:
       - POSTGRES_PASSWORD=leasers
       - POSTGRES_USER=guest
       - POSTGRES_DB=leasing_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "leasing_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   postgres-pgadmin:
     image: dpage/pgadmin4
     environment:
