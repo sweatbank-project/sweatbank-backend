@@ -19,13 +19,14 @@ CREATE TABLE Car (
 );
 
 DROP TABLE IF EXISTS users;
+DROP DROP TYPE IF EXISTS roles;
 
 CREATE TABLE users (
     id VARCHAR PRIMARY KEY,
     personal_data_id VARCHAR NOT NULL REFERENCES PersonalData(id),
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-    role roles NOT NULL
+    role VARCHAR NOT NULL
 );
 
 CREATE TABLE Leasing (
