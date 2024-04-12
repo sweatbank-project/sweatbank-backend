@@ -26,7 +26,10 @@ CREATE TABLE users (
     personal_data_id VARCHAR NOT NULL REFERENCES PersonalData(id),
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-    role VARCHAR NOT NULL
+    role VARCHAR NOT NULL,
+    account_expiration_date TIMESTAMP,
+    account_locked BOOLEAN,
+    enabled BOOLEAN
 );
 
 CREATE TABLE Leasing (
