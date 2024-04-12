@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,13 +22,13 @@ public class User implements UserDetails {
     private final boolean accountLocked;
     private final boolean enabled;
 
-    public User(String id, String personalDataId, String username, String password, String role, LocalDateTime accountExpirationDate, boolean accountLocked, boolean enabled) {
+    public User(String id, String personalDataId, String username, String password, String role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
         this.id = id;
         this.personalDataId = personalDataId;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.accountExpirationDate = accountExpirationDate;
+        this.accountExpirationDate = accountExpirationDate.toLocalDateTime();
         this.accountLocked = accountLocked;
         this.enabled = enabled;
     }
