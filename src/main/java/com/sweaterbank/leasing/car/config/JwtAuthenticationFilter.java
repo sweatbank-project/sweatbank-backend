@@ -6,14 +6,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static org.apache.logging.log4j.ThreadContext.isEmpty;
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    JwtService jwtService;
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -31,5 +31,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwtToken = authHeader.substring(7);
         userEmail = jwtService.extractEmail(jwtToken);
-        //todo: extract userEmail from JWTToken
+        if(
+                userEmail != null &&
+                SecurityContextHolder.getContext().getAuthentication() == null){
+            //TODO: use UserDetailsService to get an user
+        }
 }
