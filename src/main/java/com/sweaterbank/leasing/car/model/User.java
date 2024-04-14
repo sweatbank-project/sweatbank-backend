@@ -17,12 +17,13 @@ public class User implements UserDetails {
     private final String personalDataId;
     private final String username;
     private final String password;
-    private final String role;
+
+    private final Roles role;
     private final LocalDateTime accountExpirationDate;
     private final boolean accountLocked;
     private final boolean enabled;
 
-    public User(String id, String personalDataId, String username, String password, String role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
+    public User(String id, String personalDataId, String username, String password, Roles role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
         this.id = id;
         this.personalDataId = personalDataId;
         this.username = username;
@@ -38,7 +39,7 @@ public class User implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
         if (role != null) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role)); // Assuming role names are prefixed with "ROLE_"
+            authorities.add(new SimpleGrantedAuthority(Roles.USER.name())); // Assuming role names are prefixed with "ROLE_"
         }
 
         return authorities;
