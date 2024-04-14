@@ -18,20 +18,6 @@ CREATE TABLE Car (
      cost DECIMAL(10, 2) NOT NULL
 );
 
-DROP TABLE IF EXISTS users;
-DROP DROP TYPE IF EXISTS roles;
-
-CREATE TABLE users (
-    id VARCHAR PRIMARY KEY,
-    personal_data_id VARCHAR NOT NULL REFERENCES PersonalData(id),
-    username VARCHAR NOT NULL,
-    password VARCHAR NOT NULL,
-    role VARCHAR NOT NULL,
-    account_expiration_date TIMESTAMP,
-    account_locked BOOLEAN,
-    enabled BOOLEAN
-);
-
 CREATE TABLE Leasing (
      id VARCHAR PRIMARY KEY,
      user_id VARCHAR NOT NULL REFERENCES users(id),
