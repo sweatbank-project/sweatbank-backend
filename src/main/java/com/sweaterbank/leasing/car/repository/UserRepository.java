@@ -12,20 +12,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Repository
 public class UserRepository implements UserRepositoryInterface{
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -40,7 +36,7 @@ public class UserRepository implements UserRepositoryInterface{
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("username", username);
 
-        return namedParameterJdbcTemplate.query(Queries.SELECT_BY_EMAIL_QUERY, params, new UserMapper())
+        return namedParameterJdbcTemplate.query(Queries.SELECT_BY_EMAIL_QUERY, params, userMapper)
                 .stream()
                 .findFirst();
     }

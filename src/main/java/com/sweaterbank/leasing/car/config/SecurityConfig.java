@@ -3,12 +3,14 @@ package com.sweaterbank.leasing.car.config;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,17 +32,18 @@ public class SecurityConfig {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    // TODO: add bean for flywayInitializer
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         // TODO: set permissions to private endpoints
         http
             .csrf(AbstractHttpConfigurer::disable)
-//            .authorizeHttpRequests((authorizeRequests) -> {
-//                authorizeRequests.requestMatchers("/").permitAll();
-//            })
+            .authorizeHttpRequests((authorizeRequests) -> {
+                authorizeRequests.requestMatchers("api/auth/sign-in").permitAll();
+                authorizeRequests.requestMatchers("api/auth/sign-out").permitAll();
+                authorizeRequests.requestMatchers("api/auth/sign-up").permitAll();
+                authorizeRequests.anyRequest().authenticated();
+            })
             .httpBasic(withDefaults());
 
         // TODO: set unauthorized requests exception handling
@@ -54,6 +57,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Autowired
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);

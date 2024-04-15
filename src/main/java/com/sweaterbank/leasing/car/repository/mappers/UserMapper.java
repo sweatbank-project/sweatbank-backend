@@ -6,18 +6,19 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class UserMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
                 resultSet.getString("id"),
-                resultSet.getString("personalDataId"),
+                resultSet.getString("personal_data_id"),
                 resultSet.getString("username"),
                 resultSet.getString("password"),
-                resultSet.getObject("role", Roles.class),
-                resultSet.getTimestamp("accountExpirationDate"),
-                resultSet.getBoolean("accountLocked"),
+                Roles.valueOf(resultSet.getString("role").toUpperCase()),
+                resultSet.getTimestamp("account_expiration_date"),
+                resultSet.getBoolean("account_locked"),
                 resultSet.getBoolean("enabled")
         );
     }

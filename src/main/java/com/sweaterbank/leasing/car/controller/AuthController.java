@@ -39,8 +39,8 @@ public class AuthController
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest requestData) {
-        // TODO: write logic in separate AuthService, which returns a generated JWT token.
+    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
+    {
         try {
             Authentication authenticate = authenticationManager
                     .authenticate(
@@ -55,7 +55,7 @@ public class AuthController
                             HttpHeaders.AUTHORIZATION,
                             jwtService.generateToken(user)
                     )
-                    .body(new SignInResponse("123"));
+                    .body(new SignInResponse("Authentication successful."));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -68,7 +68,6 @@ public class AuthController
 
     @PostMapping("sign-up")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest requestData) {
-        // TESTING
         userRepository.saveUser(requestData);
 
         return ResponseEntity.ok(new SignUpResponse("User created"));

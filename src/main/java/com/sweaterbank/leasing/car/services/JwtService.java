@@ -15,10 +15,11 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "76D9E76ADCB9D8FCB4EB3FD18C44E";
+    // TODO: store in env variable
+    private static final String SECRET_KEY = "66dfee22ad766cb490a9ce47ff3af2b517f3e9fcc7352f96c2c7f6a200cb4c5326298045f89f1449f7e2f36cfbdf5b98fa37282b9e7a487fa6688b4d19f5ddbb";
     private static final int EXPIRATION_TIME_IN_MS = 60000;
     public String extractEmail(String token){
-      return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
