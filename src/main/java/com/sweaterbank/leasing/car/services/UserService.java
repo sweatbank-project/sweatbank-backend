@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -29,5 +30,11 @@ public class UserService implements UserDetailsService
         } else {
             throw new UsernameNotFoundException(USER_NOT_FOUND_MSG.formatted(email));
         }
+    }
+
+    public void createUser(SignUpRequest requestData) throws HttpClientErrorException {
+        // TODO: email, password validation
+
+        userRepository.saveUser(requestData);
     }
 }

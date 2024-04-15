@@ -7,8 +7,8 @@ import com.sweaterbank.leasing.car.controller.dto.SignOutResponse;
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
 import com.sweaterbank.leasing.car.model.User;
-import com.sweaterbank.leasing.car.repository.UserRepository;
 import com.sweaterbank.leasing.car.services.JwtService;
+import com.sweaterbank.leasing.car.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,20 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController
 {
-    // TODO: instead of repo, use Service
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserService userService;
 
-    private final JwtService jwtService ;
-    private final UserRepository userRepository;
-
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository)  {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService)  {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("login")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
+    public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
     {
         try {
             Authentication authenticate = authenticationManager
@@ -62,13 +60,13 @@ public class AuthController
     }
 
     @PostMapping("logout")
-    public ResponseEntity<SignOutResponse> signOut(@Valid @RequestBody SignOutRequest requestData) {
+    public ResponseEntity<SignOutResponse> logout(@Valid @RequestBody SignOutRequest requestData) {
         return ResponseEntity.ok(new SignOutResponse(requestData.username()));
     }
 
     @PostMapping("register")
-    public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest requestData) {
-        userRepository.saveUser(requestData);
+    public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest requestData) {
+        userService.createUser(requestData);
 
         return ResponseEntity.ok(new SignUpResponse("User created"));
     }
