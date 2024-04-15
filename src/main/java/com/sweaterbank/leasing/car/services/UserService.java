@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
+import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

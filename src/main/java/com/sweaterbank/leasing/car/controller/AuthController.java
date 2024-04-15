@@ -41,8 +41,8 @@ public class AuthController
     @PostMapping("signup")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest requestData) {
         // TESTING
-        String username = userRepository.saveUser(requestData);
+        userRepository.saveUser(requestData);
 
-        return ResponseEntity.ok(new SignUpResponse(username));
+        return ResponseEntity.ok(new SignUpResponse("User created"));
     }
 }

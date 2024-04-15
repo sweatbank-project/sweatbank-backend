@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
+import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import javax.management.relation.Role;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 @Repository
@@ -44,19 +48,23 @@ public class UserRepository implements UserRepositoryInterface{
                 .findFirst();
     }
 
-    public String saveUser(SignUpRequest request) {
+    public void saveUser(SignUpRequest request) {
         String query = """
-                    INSERT INTO users(id, username, password) VALUES (:id, :username, :password);
+                    INSERT INTO users
+                    VALUES (:id, :personal_data_id, :username, :password, :role, :account_expiration_date, :account_locked, :enabled);
                 """;
 
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", 2)
+                .addValue("id", "hdskjfhasd")
+                .addValue("personal_data_id", "2023-01-23")
                 .addValue("username", request.username())
-                .addValue("password", passwordEncoder.encode(request.password()));
+                .addValue("password", passwordEncoder.encode(request.password()))
+                .addValue("role", Roles.USER)
+                .addValue("account_expiration_date", new Timestamp(new Date().getTime()).getTime())
+                .addValue("account_locked", false)
+                .addValue("enabled", true);
 
-        var user = namedParameterJdbcTemplate.query(query, params, userMapper).getFirst();
+        namedParameterJdbcTemplate.query(query, params, userMapper);
 
-        // TODO: return ID
-        return user.getUsername();
     }
 }
