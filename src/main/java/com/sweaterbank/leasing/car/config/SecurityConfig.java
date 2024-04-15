@@ -39,9 +39,9 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorizeRequests) -> {
-                authorizeRequests.requestMatchers("api/auth/sign-in").permitAll();
-                authorizeRequests.requestMatchers("api/auth/sign-out").permitAll();
-                authorizeRequests.requestMatchers("api/auth/sign-up").permitAll();
+                authorizeRequests.requestMatchers("api/auth/login").permitAll();
+                authorizeRequests.requestMatchers("api/auth/logout").permitAll();
+                authorizeRequests.requestMatchers("api/auth/register").permitAll();
                 authorizeRequests.anyRequest().authenticated();
             })
             .httpBasic(withDefaults());

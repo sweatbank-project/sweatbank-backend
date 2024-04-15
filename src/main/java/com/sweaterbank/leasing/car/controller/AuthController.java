@@ -38,7 +38,7 @@ public class AuthController
         this.userRepository = userRepository;
     }
 
-    @PostMapping("sign-in")
+    @PostMapping("login")
     public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
     {
         try {
@@ -61,12 +61,12 @@ public class AuthController
         }
     }
 
-    @PostMapping("sign-out")
+    @PostMapping("logout")
     public ResponseEntity<SignOutResponse> signOut(@Valid @RequestBody SignOutRequest requestData) {
         return ResponseEntity.ok(new SignOutResponse(requestData.username()));
     }
 
-    @PostMapping("sign-up")
+    @PostMapping("register")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest requestData) {
         userRepository.saveUser(requestData);
 
