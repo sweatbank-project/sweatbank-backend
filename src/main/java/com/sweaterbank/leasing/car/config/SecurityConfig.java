@@ -38,12 +38,9 @@ public class SecurityConfig {
         // TODO: set permissions to private endpoints
         http
             .csrf(AbstractHttpConfigurer::disable)
-//            .securityMatcher("api/auth/**")
-            .authorizeHttpRequests((authorizeRequests) -> {
-                authorizeRequests.requestMatchers("/").permitAll();
-                authorizeRequests.requestMatchers("/sign-in").permitAll();
-                authorizeRequests.requestMatchers("/sign-up").permitAll();
-            })
+//            .authorizeHttpRequests((authorizeRequests) -> {
+//                authorizeRequests.requestMatchers("/").permitAll();
+//            })
             .httpBasic(withDefaults());
 
         // TODO: set unauthorized requests exception handling
