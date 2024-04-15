@@ -45,7 +45,7 @@ public class AuthController
             Authentication authenticate = authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    requestData.login(), requestData.password()
+                                    requestData.username(), requestData.password()
                             )
                     );
             User user = (User) authenticate.getPrincipal();
