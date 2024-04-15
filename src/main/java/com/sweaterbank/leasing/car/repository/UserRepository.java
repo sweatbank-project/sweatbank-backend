@@ -44,6 +44,7 @@ public class UserRepository implements UserRepositoryInterface{
     public void saveUser(SignUpRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
+        Timestamp expiredDate = Timestamp.valueOf("2008-12-01 13:41:31");
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", generatedUUID)
@@ -51,6 +52,7 @@ public class UserRepository implements UserRepositoryInterface{
                 .addValue("personal_data_id", null)
                 .addValue("password", encodedPassword)
                 .addValue("role", Roles.USER.toString())
+                .addValue("account_expiration_date", expiredDate)
                 .addValue("account_locked", false)
                 .addValue("enabled", true);
 
