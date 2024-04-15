@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,7 +46,7 @@ public class UserRepository implements UserRepositoryInterface{
     public void saveUser(SignUpRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
-        Timestamp expiredDate = Timestamp.valueOf("2008-12-01 13:41:31");
+        Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", generatedUUID)
