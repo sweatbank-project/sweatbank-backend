@@ -13,7 +13,13 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 @Repository
 public class UserRepository implements UserRepositoryInterface{
@@ -47,21 +53,21 @@ public class UserRepository implements UserRepositoryInterface{
 
     public void saveUser(SignUpRequest request) {
         String query = """
-                    INSERT INTO users
-                    VALUES (:id, :personal_data_id, :username, :password, :role, :account_expiration_date, :account_locked, :enabled);
+                    INSERT INTO users(id, username, personal_data_id, password, role, account_locked, enabled)
+                    VALUES (:id, :username, :personal_data_id, :password, :role, :account_locked, :enabled);
                 """;
 
-        SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", "hdskjfhasd")
+        String generatedUUID = UUID.randomUUID().toString();
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", generatedUUID)
                 .addValue("username", request.username())
                 .addValue("personal_data_id", null)
                 .addValue("password", passwordEncoder.encode(request.password()))
                 .addValue("role", Roles.USER.toString())
-                .addValue("account_expiration_date", Timestamp.valueOf("2004-10-19 10:23:54"), Types.TIMESTAMP)
                 .addValue("account_locked", false)
                 .addValue("enabled", true);
 
-        namedParameterJdbcTemplate.query(query, params, userMapper);
-
+        namedParameterJdbcTemplate.update(query, params);
     }
 }
