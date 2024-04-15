@@ -5,17 +5,14 @@ import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import javax.management.relation.Role;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Types;
 import java.util.Optional;
 
 @Repository
@@ -35,13 +32,13 @@ public class UserRepository implements UserRepositoryInterface{
     }
 
     @Override
-    public Optional<User> selectUserByEmail(String email){
+    public Optional<User> selectUserByEmail(String username) {
         String query = """
-                    SELECT * from user
-                    WHERE email = :email
+                    SELECT * from users
+                    WHERE username = :username
                 """;
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("email", email);
+                .addValue("username", username);
 
         return namedParameterJdbcTemplate.query(query, params, new UserMapper())
                 .stream()
@@ -56,11 +53,11 @@ public class UserRepository implements UserRepositoryInterface{
 
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", "hdskjfhasd")
-                .addValue("personal_data_id", "2023-01-23")
                 .addValue("username", request.username())
+                .addValue("personal_data_id", null)
                 .addValue("password", passwordEncoder.encode(request.password()))
-                .addValue("role", Roles.USER)
-                .addValue("account_expiration_date", new Timestamp(new Date().getTime()).getTime())
+                .addValue("role", Roles.USER.toString())
+                .addValue("account_expiration_date", Timestamp.valueOf("2004-10-19 10:23:54"), Types.TIMESTAMP)
                 .addValue("account_locked", false)
                 .addValue("enabled", true);
 
