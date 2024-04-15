@@ -1,19 +1,25 @@
 package com.sweaterbank.leasing.car.config;
 
+import com.sweaterbank.leasing.car.repository.UserRepository;
+import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,27 +30,34 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtService jwtService;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final UserService userService;
-
-    public SecurityConfig(JwtService jwtService, UserService userService) {
-        this.jwtService = jwtService;
-        this.userService = userService;
+    public SecurityConfig(NamedParameterJdbcTemplate namedParameterJdbcTemplate)
+    {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
+
+    // TODO: add bean for flywayInitializer
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        // TODO: set permissions to private endpoints
         http
+            .securityMatcher("api/auth/**")
             .authorizeHttpRequests((authorizeRequests) -> {
-                        authorizeRequests. requestMatchers("/").permitAll();
-                        authorizeRequests. requestMatchers("/login").permitAll();
-                        authorizeRequests.anyRequest().authenticated();
-                    }
-            )
+                authorizeRequests.requestMatchers("/").permitAll();
+                authorizeRequests.requestMatchers("/login").permitAll();
+                authorizeRequests.anyRequest().authenticated();
+            })
             .httpBasic(withDefaults());
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtService, userService), UsernamePasswordAuthenticationFilter.class);
+        // TODO: set unauthorized requests exception handling
+
+        http.addFilterBefore(
+            jwtAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class
+        );
 
         return http.build();
     }
@@ -61,10 +74,24 @@ public class SecurityConfig {
         return providerManager;
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return userService;
+        return new UserService();
+    }
+
+    @Bean
+    public UserRepository userRepository() {
+        return new UserRepository(namedParameterJdbcTemplate);
+    }
+
+    @Bean
+    public UserMapper userMapper() {
+        return new UserMapper();
     }
 
     @Bean

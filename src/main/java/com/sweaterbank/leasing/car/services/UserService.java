@@ -15,14 +15,10 @@ import java.util.Optional;
 public class UserService implements UserDetailsService
 {
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private final static String USER_NOT_FOUND_MSG = "Could not find user with email: %s.";
-
-    @Autowired
-    public UserService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException

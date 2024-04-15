@@ -6,6 +6,7 @@ import com.sweaterbank.leasing.car.controller.dto.SignOutRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignOutResponse;
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
+import com.sweaterbank.leasing.car.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class AuthController
 {
+    // TODO: instead of repo, use Service
+    private final UserRepository userRepository;
+
+    public AuthController(UserRepository userRepository)
+    {
+        this.userRepository = userRepository;
+    }
+
     @PostMapping("signin")
     public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody SignInRequest requestData) {
+        // TODO: write logic in separate AuthService, which returns a generated JWT token.
+
         return ResponseEntity.ok(new SignInResponse("jwt-token"));
     }
 
@@ -29,6 +40,9 @@ public class AuthController
 
     @PostMapping("signup")
     public ResponseEntity<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest requestData) {
-        return ResponseEntity.ok(new SignUpResponse("jwt-success-token"));
+        // TESTING
+        String username = userRepository.saveUser(requestData);
+
+        return ResponseEntity.ok(new SignUpResponse(username));
     }
 }
