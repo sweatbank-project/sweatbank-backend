@@ -4,6 +4,7 @@ import com.sweaterbank.leasing.car.controller.dto.SignInRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignInResponse;
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
+import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
@@ -15,11 +16,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -48,12 +52,18 @@ public class AuthController
                     );
             User user = (User) authenticate.getPrincipal();
 
+            String role = Roles.USER.toString();
+            Optional<? extends GrantedAuthority> optionalAuthority = user.getAuthorities().stream().findFirst();
+            if (optionalAuthority.isPresent()) {
+                role = optionalAuthority.get().getAuthority();
+            }
+
             return ResponseEntity.ok()
                     .header(
                             HttpHeaders.AUTHORIZATION,
                             jwtService.generateToken(user)
                     )
-                    .body(new SignInResponse("Authentication successful."));
+                    .body(new SignInResponse(role));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
