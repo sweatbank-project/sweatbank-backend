@@ -4,14 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -41,7 +44,13 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+
+        HashMap<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("authorities",
+                authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+
+        return generateToken(extraClaims, userDetails);
     }
     public String generateToken(
             Map<String, Object> extraClaims,
