@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private final String password;
 
     private final Roles role;
-    private final LocalDateTime accountExpirationDate;
+    private final Timestamp accountExpirationDate;
     private final boolean accountLocked;
     private final boolean enabled;
 
@@ -29,7 +29,7 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.accountExpirationDate = accountExpirationDate.toLocalDateTime();
+        this.accountExpirationDate = accountExpirationDate;
         this.accountLocked = accountLocked;
         this.enabled = enabled;
     }
@@ -39,7 +39,7 @@ public class User implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
         if (role != null) {
-            authorities.add(new SimpleGrantedAuthority(Roles.USER.name())); // Assuming role names are prefixed with "ROLE_"
+            authorities.add(new SimpleGrantedAuthority(role.toString())); // Assuming role names are prefixed with "ROLE_"
         }
 
         return authorities;
@@ -58,7 +58,7 @@ public class User implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return this.accountExpirationDate == null ||
-                LocalDateTime.now().isBefore(this.accountExpirationDate);
+                new Timestamp(LocalDateTime.now().getSecond()).before(this.accountExpirationDate);
     }
 
     @Override
