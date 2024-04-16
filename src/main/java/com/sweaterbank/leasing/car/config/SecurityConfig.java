@@ -44,6 +44,7 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
                 authorizeRequests.anyRequest().authenticated();
             })
+            .logout(logout -> logout.logoutUrl("api/auth/logout"))
             .httpBasic(withDefaults());
 
         // TODO: set unauthorized requests exception handling

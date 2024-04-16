@@ -2,8 +2,6 @@ package com.sweaterbank.leasing.car.controller;
 
 import com.sweaterbank.leasing.car.controller.dto.SignInRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignInResponse;
-import com.sweaterbank.leasing.car.controller.dto.SignOutRequest;
-import com.sweaterbank.leasing.car.controller.dto.SignOutResponse;
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
 import com.sweaterbank.leasing.car.model.User;
@@ -57,11 +55,6 @@ public class AuthController
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-    }
-
-    @PostMapping("logout")
-    public ResponseEntity<SignOutResponse> logout(@Valid @RequestBody SignOutRequest requestData) {
-        return ResponseEntity.ok(new SignOutResponse(requestData.username()));
     }
 
     @PostMapping("register")
