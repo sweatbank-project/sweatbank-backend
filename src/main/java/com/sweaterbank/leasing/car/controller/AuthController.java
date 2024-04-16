@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 public class AuthController
 {
@@ -40,6 +40,7 @@ public class AuthController
         this.userService = userService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("login")
     public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
     {
