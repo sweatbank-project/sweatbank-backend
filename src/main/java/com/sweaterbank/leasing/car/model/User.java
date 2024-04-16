@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private final String password;
 
     private final Roles role;
-    private final LocalDateTime accountExpirationDate;
+    private final Timestamp accountExpirationDate;
     private final boolean accountLocked;
     private final boolean enabled;
 
@@ -29,8 +29,9 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.accountExpirationDate = accountExpirationDate == null ? LocalDateTime.now().plusDays(1) :
-                accountExpirationDate.toLocalDateTime();
+        this.accountExpirationDate = accountExpirationDate;
+//        this.accountExpirationDate = accountExpirationDate == null ? LocalDateTime.now().plusDays(1) :
+//                accountExpirationDate.toLocalDateTime();
         this.accountLocked = accountLocked;
         this.enabled = enabled;
     }
@@ -59,7 +60,7 @@ public class User implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return this.accountExpirationDate == null ||
-                LocalDateTime.now().isBefore(this.accountExpirationDate);
+                new Timestamp(LocalDateTime.now().getSecond()).before(this.accountExpirationDate);
     }
 
     @Override
