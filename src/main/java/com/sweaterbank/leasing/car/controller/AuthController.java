@@ -1,9 +1,9 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.SignInRequest;
-import com.sweaterbank.leasing.car.controller.dto.SignInResponse;
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
-import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
+import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
+import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterResponse;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
@@ -35,7 +35,7 @@ public class AuthController
     }
 
     @PostMapping("login")
-    public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest requestData) throws BadCredentialsException
     {
         try {
             Authentication authenticate = authenticationManager
@@ -51,16 +51,16 @@ public class AuthController
                             HttpHeaders.AUTHORIZATION,
                             jwtService.generateToken(user)
                     )
-                    .body(new SignInResponse("Authentication successful."));
+                    .body(new LoginResponse("Authentication successful."));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping("register")
-    public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest requestData) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) {
         userService.createUser(requestData);
 
-        return ResponseEntity.ok(new SignUpResponse("User created"));
+        return ResponseEntity.ok(new RegisterResponse("User created"));
     }
 }

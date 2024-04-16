@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService
         }
     }
 
-    public void createUser(SignUpRequest requestData) throws HttpClientErrorException {
+    public void createUser(RegisterRequest requestData) throws HttpClientErrorException {
         // TODO: email, password validation
 
         userRepository.saveUser(requestData);

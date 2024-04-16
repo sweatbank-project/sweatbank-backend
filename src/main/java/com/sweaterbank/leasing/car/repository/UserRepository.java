@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
@@ -43,7 +43,7 @@ public class UserRepository implements UserRepositoryInterface{
                 .findFirst();
     }
 
-    public void saveUser(SignUpRequest request) {
+    public void saveUser(RegisterRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
         Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
