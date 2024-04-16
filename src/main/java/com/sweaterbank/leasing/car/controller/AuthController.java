@@ -9,6 +9,7 @@ import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Optional;
 
@@ -42,7 +45,7 @@ public class AuthController
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("login")
-    public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
+    public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws AuthenticationException
     {
         try {
             Authentication authenticate = authenticationManager
@@ -65,15 +68,20 @@ public class AuthController
                             jwtService.generateToken(user)
                     )
                     .body(new SignInResponse(role));
-        } catch (BadCredentialsException ex) {
+        } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping("register")
     public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest requestData) {
-        userService.createUser(requestData);
+        try {
+            userService.createUser(requestData);
 
-        return ResponseEntity.ok(new SignUpResponse("User created"));
+            SignUpResponse response = new SignUpResponse("User created");
+            return ResponseEntity.ok(response);
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

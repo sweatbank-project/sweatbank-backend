@@ -4,6 +4,7 @@ import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +33,7 @@ public class UserService implements UserDetailsService
         }
     }
 
-    public void createUser(SignUpRequest requestData) throws HttpClientErrorException {
+    public void createUser(SignUpRequest requestData) throws DataAccessException {
         // TODO: email, password validation
 
         userRepository.saveUser(requestData);

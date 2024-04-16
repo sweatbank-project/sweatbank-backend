@@ -6,6 +6,7 @@ import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -43,7 +44,8 @@ public class UserRepository implements UserRepositoryInterface{
                 .findFirst();
     }
 
-    public void saveUser(SignUpRequest request) {
+    public void saveUser(SignUpRequest request) throws DataAccessException
+    {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
         Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
