@@ -1,0 +1,7 @@
+ALTER TABLE users
+DROP COLUMN personal_id,
+DROP COLUMN first_name,
+DROP COLUMN last_name,
+ADD COLUMN personal_id VARCHAR(32) NOT NULL,
+ADD COLUMN first_name VARCHAR(64) NOT NULL,
+ADD COLUMN last_name VARCHAR(64) NOT NULL;
