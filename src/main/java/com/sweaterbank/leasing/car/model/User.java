@@ -30,8 +30,6 @@ public class User implements UserDetails {
         this.password = password;
         this.role = role;
         this.accountExpirationDate = accountExpirationDate;
-//        this.accountExpirationDate = accountExpirationDate == null ? LocalDateTime.now().plusDays(1) :
-//                accountExpirationDate.toLocalDateTime();
         this.accountLocked = accountLocked;
         this.enabled = enabled;
     }
