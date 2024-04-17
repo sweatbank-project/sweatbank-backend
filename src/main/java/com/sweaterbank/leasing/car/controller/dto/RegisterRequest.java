@@ -1,5 +1,6 @@
 package com.sweaterbank.leasing.car.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ public record RegisterRequest(
         @NotEmpty
         @NotBlank
         @NotNull(message = "Username may not be null")
-        @Email
+        @Email(message = "Email must be in a valid form: example@mymail.com", regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
         String username,
         @NotEmpty
         @NotBlank
@@ -37,10 +38,10 @@ public record RegisterRequest(
         @NotEmpty
         @NotBlank
         @NotNull(message = "Last name may not be null") String lastName,
-        @NotEmpty
-        @NotBlank
+
         @PastOrPresent
         @NotNull(message = "Birthdate may not be null")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         Date birthDate,
         @NotEmpty
         @NotBlank

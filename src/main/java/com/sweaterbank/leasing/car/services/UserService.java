@@ -32,9 +32,10 @@ public class UserService implements UserDetailsService
         }
     }
 
-    public void createUser(RegisterRequest requestData) throws HttpClientErrorException {
-        // TODO: email, password validation
+    public void createUser(RegisterRequest requestData) throws HttpClientErrorException.BadRequest {
+        if(requestData.password().equals(requestData.confirmPassword())){
+            userRepository.saveUser(requestData);
+        }
 
-        userRepository.saveUser(requestData);
     }
 }
