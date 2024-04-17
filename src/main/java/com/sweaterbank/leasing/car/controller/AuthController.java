@@ -74,6 +74,6 @@ public class AuthController
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) {
         userService.createUser(requestData);
 
-        return ResponseEntity.ok(new RegisterResponse("User created"));
+        return ResponseEntity.ok().build();
     }
 }
