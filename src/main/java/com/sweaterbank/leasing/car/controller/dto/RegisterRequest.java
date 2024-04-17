@@ -45,5 +45,10 @@ public record RegisterRequest(
         @NotEmpty
         @NotBlank
         @NotNull(message = "Address may not be null")
-        String address
+        String address,
+
+        @NotNull
+        @NotEmpty
+        @NotBlank
+        String confirmPassword
 ) { }
