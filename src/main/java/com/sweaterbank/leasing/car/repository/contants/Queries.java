@@ -12,6 +12,25 @@ public class Queries
             """
                     SELECT * FROM users
                     WHERE username = :username
+                    LIMIT 1
             """;
 
+    public static final String GET_LEASING_QUERY =
+            """
+                    SELECT * FROM Leasing
+                    WHERE id = :id
+                    LIMIT 1
+            """;
+
+    public static final String GET_ALL_LEASING_QUERY =
+            """
+                    SELECT * FROM Leasing
+                    LIMIT :limit OFFSET :offset
+            """;
+
+    public static final String GET_OBLIGATIONS_FOR_LEASING_QUERY =
+            """
+                    SELECT * FROM Obligation
+                    WHERE leasing_id = :leasing_id
+            """;
 }

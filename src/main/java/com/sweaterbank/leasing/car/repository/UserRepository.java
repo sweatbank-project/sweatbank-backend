@@ -18,19 +18,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class UserRepository implements UserRepositoryInterface{
+public class UserRepository implements UserRepositoryInterface {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate)
+    public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, UserMapper userMapper, PasswordEncoder passwordEncoder)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

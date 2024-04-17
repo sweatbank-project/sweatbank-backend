@@ -1,6 +1,8 @@
 package com.sweaterbank.leasing.car.config;
 
 import com.sweaterbank.leasing.car.repository.UserRepository;
+import com.sweaterbank.leasing.car.repository.mappers.LeasingMapper;
+import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,13 +105,19 @@ public class SecurityConfig {
 
     @Bean
     public UserRepository userRepository() {
-        return new UserRepository(namedParameterJdbcTemplate);
+        return new UserRepository(namedParameterJdbcTemplate, userMapper(), passwordEncoder());
     }
 
     @Bean
     public UserMapper userMapper() {
         return new UserMapper();
     }
+
+    @Bean
+    public LeasingMapper leasingMapper() { return new LeasingMapper(); }
+
+    @Bean
+    public ObligationMapper obligationMapper() { return new ObligationMapper(); }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
