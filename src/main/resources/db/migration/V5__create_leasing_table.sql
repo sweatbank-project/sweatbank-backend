@@ -10,12 +10,12 @@ CREATE TABLE Leasing (
     car_cost DECIMAL(19, 4),
     leasing_period INTEGER,
     car_seller_name VARCHAR,
-    education VARCHAR,
-    held_position VARCHAR,
-    job_title VARCHAR,
-    time_employed VARCHAR,
-    employer_business_area VARCHAR,
-    marital_status VARCHAR,
+    education VARCHAR, -- ENUM
+    held_position VARCHAR, -- ENUM
+    job_title VARCHAR, -- Issiaiskint su PO, ar enum dropdown ar string
+    time_employed INTEGER,
+    employer_business_area VARCHAR, -- ENUM
+    marital_status VARCHAR, -- ENUM
     number_of_children INTEGER,
     monthly_income_after_taxes DECIMAL(19, 4)
 );
@@ -23,7 +23,7 @@ CREATE TABLE Leasing (
 CREATE TABLE Obligation (
     id VARCHAR PRIMARY KEY,
     leasing_id VARCHAR NOT NULL REFERENCES Leasing(id),
-    obligation_type VARCHAR,
+    obligation_type VARCHAR, -- ENUM
     outstanding_debt DECIMAL(19, 4),
     monthly_payment DECIMAL(19, 4)
 );
