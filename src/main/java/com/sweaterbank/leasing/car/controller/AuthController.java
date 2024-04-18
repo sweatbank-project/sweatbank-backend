@@ -4,6 +4,8 @@ import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
 import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
 import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.controller.dto.RegisterResponse;
+import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
+import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
@@ -71,7 +73,8 @@ public class AuthController
     }
 
     @PostMapping("register")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) throws AccountExistsException, NotMatchingPasswordsException
+    {
         userService.createUser(requestData);
 
         return ResponseEntity.ok().build();
