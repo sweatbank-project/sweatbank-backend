@@ -43,7 +43,6 @@ public class AuthController
         this.userService = userService;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("login")
     public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws AuthenticationException
     {

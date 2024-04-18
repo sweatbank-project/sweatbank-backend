@@ -9,6 +9,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
   postgres:
     image: postgres:latest
     ports:
