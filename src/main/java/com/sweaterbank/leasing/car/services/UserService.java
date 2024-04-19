@@ -33,8 +33,6 @@ public class UserService implements UserDetailsService
     }
 
     public void createUser(SignUpRequest requestData) throws HttpClientErrorException {
-        // TODO: email, password validation
-
         userRepository.saveUser(requestData);
     }
 }
