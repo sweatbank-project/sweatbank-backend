@@ -47,6 +47,7 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
+                authorizeRequests.requestMatchers("api/auth/isAdmin").permitAll();
                 authorizeRequests.anyRequest().authenticated();
             })
             .cors(Customizer.withDefaults())

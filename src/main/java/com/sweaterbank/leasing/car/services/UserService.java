@@ -3,6 +3,9 @@ package com.sweaterbank.leasing.car.services;
 import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +22,9 @@ public class UserService implements UserDetailsService
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtService jwtService;
 
     private final static String USER_NOT_FOUND_MSG = "Could not find user with email: %s.";
 
@@ -37,4 +44,9 @@ public class UserService implements UserDetailsService
 
         userRepository.saveUser(requestData);
     }
+    public boolean hasPermission(String jwtToken, String requiredRole) {
+        List<String> authorities = jwtService.extractAuthorities(jwtToken);
+        return authorities.contains(requiredRole);
+    }
+
 }

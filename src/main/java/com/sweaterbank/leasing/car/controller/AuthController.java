@@ -8,6 +8,7 @@ import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -74,5 +77,15 @@ public class AuthController
         userService.createUser(requestData);
 
         return ResponseEntity.ok(new SignUpResponse("User created"));
+    }
+
+    @PostMapping("isAdmin")
+    public ResponseEntity<?> isAdmin(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization");
+        if (userService.hasPermission(jwtToken, "admin")) {
+            return ResponseEntity.ok("Admin verified.");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Admin not verified.");
+        }
     }
 }
