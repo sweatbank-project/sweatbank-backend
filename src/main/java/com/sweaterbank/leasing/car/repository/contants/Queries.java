@@ -33,4 +33,16 @@ public class Queries
                     SELECT * FROM Obligation
                     WHERE leasing_id = :leasing_id
             """;
+    public static final String SAVE_LEASING_QUERY =
+            "INSERT INTO Leasing (id, status, car_brand, car_model, manufacture_year, car_cost, leasing_period, car_seller_name, " +
+                    "education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children, " +
+                    "monthly_income_after_taxes, customer_loans_outstanding, customer_loans_monthly_payment, car_lease_outstanding, " +
+                    "car_lease_monthly_payment, credit_card_outstanding, credit_card_monthly_payment, mortgage_outstanding, " +
+                    "mortgage_monthly_payment, other_credits_outstanding, other_credits_monthly_payment) " +
+                    "VALUES (:id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :leasing_period, :car_seller_name, " +
+                    ":education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children, " +
+                    ":monthly_income_after_taxes, :customer_loans_outstanding, :customer_loans_monthly_payment, :car_lease_outstanding, " +
+                    ":car_lease_monthly_payment, :credit_card_outstanding, :credit_card_monthly_payment, :mortgage_outstanding, " +
+                    ":mortgage_monthly_payment, :other_credits_outstanding, :other_credits_monthly_payment)";
+
 }

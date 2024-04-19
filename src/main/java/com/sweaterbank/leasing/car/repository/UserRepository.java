@@ -40,7 +40,7 @@ public class UserRepository implements UserRepositoryInterface {
                 .stream()
                 .findFirst();
     }
-
+    @Override
     public void saveUser(SignUpRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
