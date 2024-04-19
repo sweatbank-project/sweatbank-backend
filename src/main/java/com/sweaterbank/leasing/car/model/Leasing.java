@@ -13,12 +13,12 @@ public record Leasing(
         BigDecimal carCost,
         int leasingPeriod,
         String carSellerName,
-        String education,
-        String heldPosition, // CAN BE NULL
+        EducationType education,
+        HeldPositionType heldPosition, // CAN BE NULL
         String jobTitle, // CAN BE NULL
         String timeEmployed, // CAN BE NULL
-        String employerBusinessArea, // CAN BE NULL
-        String maritalStatus,
+        BusinessAreaType employerBusinessArea, // CAN BE NULL
+        MaritalStatus maritalStatus,
         int numberOfChildren,
         BigDecimal monthlyIncomeAfterTaxes
 ) {

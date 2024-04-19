@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
 import com.sweaterbank.leasing.car.model.Obligation;
+import com.sweaterbank.leasing.car.model.ObligationType;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -12,7 +13,7 @@ public class ObligationMapper implements RowMapper<Obligation> {
         return new Obligation(
                 resultSet.getString("id"),
                 resultSet.getString("leasing_id"),
-                resultSet.getString("type_of_obligation"),
+                ObligationType.fromString(resultSet.getString("type_of_obligation")),
                 resultSet.getBigDecimal("outstanding_debt"),
                 resultSet.getBigDecimal("monthly_payment")
         );

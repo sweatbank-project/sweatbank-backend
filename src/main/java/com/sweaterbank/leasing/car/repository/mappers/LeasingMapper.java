@@ -1,7 +1,11 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
+import com.sweaterbank.leasing.car.model.BusinessAreaType;
+import com.sweaterbank.leasing.car.model.EducationType;
+import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.model.LeasingStatus;
+import com.sweaterbank.leasing.car.model.MaritalStatus;
 import com.sweaterbank.leasing.car.model.Obligation;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -24,12 +28,12 @@ public class LeasingMapper implements RowMapper<Leasing>
                 resultSet.getBigDecimal("car_cost"),
                 resultSet.getInt("leasing_period"),
                 resultSet.getString("car_seller_name"),
-                resultSet.getString("education"),
-                resultSet.getString("held_position"),
+                EducationType.valueOf(resultSet.getString("education").toUpperCase()),
+                HeldPositionType.fromString(resultSet.getString("held_position")),
                 resultSet.getString("job_title"),
                 resultSet.getString("time_employed"),
-                resultSet.getString("employer_business_area"),
-                resultSet.getString("marital_status"),
+                BusinessAreaType.fromString(resultSet.getString("employer_business_area")),
+                MaritalStatus.fromString(resultSet.getString("marital_status")),
                 resultSet.getInt("number_of_children"),
                 resultSet.getBigDecimal("monthly_income_after_taxes")
         );
