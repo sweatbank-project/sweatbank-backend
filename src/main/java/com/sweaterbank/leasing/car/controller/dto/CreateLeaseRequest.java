@@ -1,11 +1,12 @@
 package com.sweaterbank.leasing.car.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public record CreateLeasingRequest(
+public record CreateLeaseRequest(
         String makes,
         @NotBlank(message = "Field is required")
         String models,
@@ -52,16 +53,34 @@ public record CreateLeasingRequest(
         @NotBlank(message = "Field is required")
         String obligations,
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         BigDecimal customerLoansOutstanding,
-        BigDecimal customerLoansMonthlyPayment,
-        BigDecimal carLeaseOutstanding,
-        BigDecimal carLeaseMonthlyPayment,
-        BigDecimal creditCardOutstanding,
-        BigDecimal creditCardMonthlyPayment,
-        BigDecimal mortgageOutstanding,
-        BigDecimal mortgageMonthlyPayment,
-        BigDecimal otherCreditsOutstanding,
-        BigDecimal otherCreditsMonthlyPayment
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal customerLoansMonthlyPayment,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal carLeaseOutstanding,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal carLeaseMonthlyPayment,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal creditCardOutstanding,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal creditCardMonthlyPayment,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal mortgageOutstanding,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal mortgageMonthlyPayment,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal otherCreditsOutstanding,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal otherCreditsMonthlyPayment
 ) {
 }

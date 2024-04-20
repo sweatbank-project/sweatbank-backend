@@ -12,7 +12,7 @@ CREATE TABLE Leasing (
     car_seller_name VARCHAR,
     education VARCHAR, -- ENUM
     held_position VARCHAR, -- ENUM
-    job_title VARCHAR, -- Issiaiskint su PO, ar enum dropdown ar string
+    job_title VARCHAR,
     time_employed INTEGER,
     employer_business_area VARCHAR, -- ENUM
     marital_status VARCHAR, -- ENUM

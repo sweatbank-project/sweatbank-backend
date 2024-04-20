@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public record Obligation (
         String id,
         String leasingId,
-        String typeOfObligation,
+        ObligationType typeOfObligation,
         BigDecimal outstandingDebt,
         BigDecimal monthlyPayment
 ) { }
