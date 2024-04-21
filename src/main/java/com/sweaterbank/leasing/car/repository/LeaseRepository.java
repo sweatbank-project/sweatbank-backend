@@ -35,7 +35,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
 
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
-                .addValue("status", Status.PENDING.toString()) // Assuming default status is "NEW"
+                .addValue("status", Status.PENDING.toString())
                 .addValue("car_brand", requestData.makes())
                 .addValue("car_model", requestData.models())
                 .addValue("manufacture_year", Integer.parseInt(requestData.yearOfManufacture()))
