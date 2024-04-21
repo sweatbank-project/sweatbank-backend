@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Repository
@@ -67,72 +68,56 @@ public class LeaseRepository implements LeaseRepositoryInterface
 
         if (requestData.obligations().equalsIgnoreCase("YES")) {
             if (requestData.customerLoansOutstanding() != null) {
-                String customerObligationId = UUID.randomUUID().toString();
-
-                SqlParameterSource customerParams = new MapSqlParameterSource()
-                        .addValue("id", customerObligationId)
-                        .addValue("leasing_id", leaseId)
-                        .addValue("obligation_type", ObligationType.CUSTOMER.toString())
-                        .addValue("outstanding_debt", requestData.customerLoansOutstanding())
-                        .addValue("monthly_payment", requestData.customerLoansMonthlyPayment());
+                SqlParameterSource customerParams = getObligationParams(leaseId, ObligationType.CUSTOMER,
+                        requestData.customerLoansOutstanding(), requestData.customerLoansMonthlyPayment());
 
                 params.add(customerParams);
             }
 
             if (requestData.carLeaseOutstanding() != null) {
-                String carLeaseObligationId = UUID.randomUUID().toString();
-
-                SqlParameterSource carLeaseParams = new MapSqlParameterSource()
-                        .addValue("id", carLeaseObligationId)
-                        .addValue("leasing_id", leaseId)
-                        .addValue("obligation_type", ObligationType.CAR_LEASE.toString())
-                        .addValue("outstanding_debt", requestData.carLeaseOutstanding())
-                        .addValue("monthly_payment", requestData.carLeaseMonthlyPayment());
+                SqlParameterSource carLeaseParams = getObligationParams(leaseId, ObligationType.CAR_LEASE,
+                        requestData.carLeaseOutstanding(), requestData.carLeaseMonthlyPayment());
 
                 params.add(carLeaseParams);
             }
 
             if (requestData.creditCardOutstanding() != null) {
-                String creditCardObligationId = UUID.randomUUID().toString();
-
-                SqlParameterSource creditCardParams = new MapSqlParameterSource()
-                        .addValue("id", creditCardObligationId)
-                        .addValue("leasing_id", leaseId)
-                        .addValue("obligation_type", ObligationType.CREDIT_CARD.toString())
-                        .addValue("outstanding_debt", requestData.creditCardOutstanding())
-                        .addValue("monthly_payment", requestData.creditCardMonthlyPayment());
+                SqlParameterSource creditCardParams = getObligationParams(leaseId, ObligationType.CREDIT_CARD,
+                        requestData.creditCardOutstanding(), requestData.creditCardMonthlyPayment());
 
                 params.add(creditCardParams);
             }
 
             if (requestData.mortgageOutstanding() != null) {
-                String mortgageObligationId = UUID.randomUUID().toString();
-
-                SqlParameterSource mortgageParams = new MapSqlParameterSource()
-                        .addValue("id", mortgageObligationId)
-                        .addValue("leasing_id", leaseId)
-                        .addValue("obligation_type", ObligationType.MORTGAGE.toString())
-                        .addValue("outstanding_debt", requestData.mortgageOutstanding())
-                        .addValue("monthly_payment", requestData.mortgageMonthlyPayment());
+                SqlParameterSource mortgageParams = getObligationParams(leaseId, ObligationType.MORTGAGE,
+                        requestData.mortgageOutstanding(), requestData.mortgageMonthlyPayment());
 
                 params.add(mortgageParams);
             }
 
             if (requestData.otherCreditsOutstanding() != null) {
-                String otherObligationsId = UUID.randomUUID().toString();
-
-                SqlParameterSource otherCreditsParams = new MapSqlParameterSource()
-                        .addValue("id", otherObligationsId)
-                        .addValue("leasing_id", leaseId)
-                        .addValue("obligation_type", ObligationType.OTHER_CREDITS.toString())
-                        .addValue("outstanding_debt", requestData.otherCreditsOutstanding())
-                        .addValue("monthly_payment", requestData.otherCreditsMonthlyPayment());
+                SqlParameterSource otherCreditsParams = getObligationParams(leaseId, ObligationType.OTHER_CREDITS,
+                        requestData.otherCreditsOutstanding(), requestData.otherCreditsMonthlyPayment());
 
                 params.add(otherCreditsParams);
             }
         }
 
         return params.toArray(new SqlParameterSource[0]);
+    }
+
+    private SqlParameterSource getObligationParams(String leaseId,
+                                                           ObligationType obligationType,
+                                                           BigDecimal obligationOutstanding,
+                                                           BigDecimal monthlyPayment) {
+        String obligationId = UUID.randomUUID().toString();
+
+        return new MapSqlParameterSource()
+                .addValue("id", obligationId)
+                .addValue("leasing_id", leaseId)
+                .addValue("obligation_type", obligationType)
+                .addValue("outstanding_debt", obligationOutstanding)
+                .addValue("monthly_payment", monthlyPayment);
     }
 
     @Override
