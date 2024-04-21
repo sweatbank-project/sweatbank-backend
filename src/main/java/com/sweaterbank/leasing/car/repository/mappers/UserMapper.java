@@ -12,9 +12,14 @@ public class UserMapper implements RowMapper<User> {
     public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new User(
                 resultSet.getString("id"),
-                resultSet.getString("personal_data_id"),
                 resultSet.getString("username"),
+                resultSet.getString("phone_number"),
+                resultSet.getString("personal_id"),
                 resultSet.getString("password"),
+                resultSet.getString("first_name"),
+                resultSet.getString("last_name"),
+                resultSet.getDate("birth_date"),
+                resultSet.getString("address"),
                 Roles.valueOf(resultSet.getString("role").toUpperCase()),
                 resultSet.getTimestamp("account_expiration_date"),
                 resultSet.getBoolean("account_locked"),

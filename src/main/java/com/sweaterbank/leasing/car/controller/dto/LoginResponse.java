@@ -1,3 +1,3 @@
 package com.sweaterbank.leasing.car.controller.dto;
 
-public record SignInResponse (String role) { }
+public record LoginResponse(String role) { }

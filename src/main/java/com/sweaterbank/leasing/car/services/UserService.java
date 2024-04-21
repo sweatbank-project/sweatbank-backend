@@ -1,6 +1,8 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
+import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
+import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,17 @@ public class UserService implements UserDetailsService
         }
     }
 
-    public void createUser(SignUpRequest requestData) throws HttpClientErrorException {
-        userRepository.saveUser(requestData);
+    public void createUser(RegisterRequest requestData) throws HttpClientErrorException.BadRequest, AccountExistsException, NotMatchingPasswordsException
+    {
+        Optional<User> user = userRepository.selectUserByEmail(requestData.username());
+        if(user.isEmpty()){
+            if(requestData.password().equals(requestData.confirmPassword())){
+                userRepository.saveUser(requestData);
+            } else {
+                throw new NotMatchingPasswordsException();
+            }
+        } else {
+            throw new AccountExistsException();
+        }
     }
 }
