@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 public class UserMapper implements RowMapper<User> {
     @Override

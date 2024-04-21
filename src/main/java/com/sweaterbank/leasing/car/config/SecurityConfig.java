@@ -1,6 +1,8 @@
 package com.sweaterbank.leasing.car.config;
 
 import com.sweaterbank.leasing.car.repository.UserRepository;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
+import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,8 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
+                authorizeRequests.requestMatchers("api/lease/create").permitAll();
+                authorizeRequests.requestMatchers("api/admin/leases").permitAll();
                 authorizeRequests.anyRequest().authenticated();
             })
             .cors(Customizer.withDefaults())
@@ -103,13 +107,19 @@ public class SecurityConfig {
 
     @Bean
     public UserRepository userRepository() {
-        return new UserRepository(namedParameterJdbcTemplate);
+        return new UserRepository(namedParameterJdbcTemplate, userMapper(), passwordEncoder());
     }
 
     @Bean
     public UserMapper userMapper() {
         return new UserMapper();
     }
+
+    @Bean
+    public LeaseMapper leaseMapper() { return new LeaseMapper(); }
+
+    @Bean
+    public ObligationMapper obligationMapper() { return new ObligationMapper(); }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
