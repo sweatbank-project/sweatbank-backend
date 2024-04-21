@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
@@ -43,7 +43,7 @@ public class UserRepository implements UserRepositoryInterface{
                 .findFirst();
     }
 
-    public void saveUser(SignUpRequest request) {
+    public void saveUser(RegisterRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
         Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
@@ -51,8 +51,13 @@ public class UserRepository implements UserRepositoryInterface{
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", generatedUUID)
                 .addValue("username", request.username())
-                .addValue("personal_data_id", null)
+                .addValue("phone_number",request.phoneNumber())
+                .addValue("personal_id", request.personalId())
                 .addValue("password", encodedPassword)
+                .addValue("first_name", request.firstName())
+                .addValue("last_name", request.lastName())
+                .addValue("birth_date", request.birthDate())
+                .addValue("address", request.address())
                 .addValue("role", Roles.USER.toString())
                 .addValue("account_expiration_date", expiredDate)
                 .addValue("account_locked", false)

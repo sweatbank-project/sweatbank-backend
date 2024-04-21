@@ -1,9 +1,11 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.SignInRequest;
-import com.sweaterbank.leasing.car.controller.dto.SignInResponse;
-import com.sweaterbank.leasing.car.controller.dto.SignUpRequest;
-import com.sweaterbank.leasing.car.controller.dto.SignUpResponse;
+import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
+import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
+import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
+import com.sweaterbank.leasing.car.controller.dto.RegisterResponse;
+import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
+import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.services.JwtService;
@@ -41,7 +43,7 @@ public class AuthController
     }
 
     @PostMapping("login")
-    public ResponseEntity<SignInResponse> login(@Valid @RequestBody SignInRequest requestData) throws BadCredentialsException
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest requestData) throws BadCredentialsException
     {
         try {
             Authentication authenticate = authenticationManager
@@ -63,16 +65,18 @@ public class AuthController
                             HttpHeaders.AUTHORIZATION,
                             jwtService.generateToken(user)
                     )
-                    .body(new SignInResponse(role));
+                    .body(new LoginResponse(role));
+
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @PostMapping("register")
-    public ResponseEntity<SignUpResponse> register(@Valid @RequestBody SignUpRequest requestData) {
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) throws AccountExistsException, NotMatchingPasswordsException
+    {
         userService.createUser(requestData);
 
-        return ResponseEntity.ok(new SignUpResponse("User created"));
+        return ResponseEntity.ok().build();
     }
 }

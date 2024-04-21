@@ -8,26 +8,36 @@ import org.springframework.security.core.GrantedAuthority;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class User implements UserDetails {
 
     private final String id;
-    private final String personalDataId;
     private final String username;
+    private final String phoneNumber;
+    private final String personalId;
     private final String password;
-
+    private final String firstName;
+    private final String lastName;
+    private final Date birthdate;
+    private final String address;
     private final Roles role;
     private final Timestamp accountExpirationDate;
     private final boolean accountLocked;
     private final boolean enabled;
 
-    public User(String id, String personalDataId, String username, String password, Roles role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
+    public User(String id, String username, String phoneNumber, String personalId, String password, String firstName, String lastName, Date birthdate, String address, Roles role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
         this.id = id;
-        this.personalDataId = personalDataId;
         this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.personalId = personalId;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.address = address;
         this.role = role;
         this.accountExpirationDate = accountExpirationDate;
         this.accountLocked = accountLocked;
