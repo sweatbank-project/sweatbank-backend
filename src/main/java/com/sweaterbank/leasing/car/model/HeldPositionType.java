@@ -2,7 +2,7 @@ package com.sweaterbank.leasing.car.model;
 
 public enum HeldPositionType {
     WORKER("worker"),
-    SUPERIOR_SPECIALIST("superiorSpecialist"),
+    SUPERIOR_SPECIALIST("supervisorSpecialist"),
     MIDDLE_MANAGER("middleManager"),
     EXECUTIVE("executive"),
     HIGHER("higher"),

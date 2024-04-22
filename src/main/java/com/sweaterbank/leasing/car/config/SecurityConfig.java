@@ -8,6 +8,7 @@ import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -33,9 +34,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final Environment environment;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public SecurityConfig(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public SecurityConfig(Environment environment, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.environment = environment;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -53,7 +56,7 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/admin/leases").permitAll();
                 authorizeRequests.anyRequest().authenticated();
             })
-            .cors(Customizer.withDefaults())
+            .cors(withDefaults())
             .logout(logout -> logout.logoutUrl("api/auth/logout"))
             .httpBasic(withDefaults());
 
@@ -82,9 +85,11 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        String allowedOrigin = this.environment.getProperty("sweatbank-backend.cors.allowed-origin");
+
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedOrigins(List.of(allowedOrigin));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS", "HEAD"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(List.of("*"));
         configuration.addExposedHeader("Authorization");

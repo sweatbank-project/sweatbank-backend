@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "sweatbank-backend.cors.allowed-origin",
+      "type": "java.lang.String",
+      "description": "The allowed origin from which request can be made. Used for CORS configuration."
+  }
+] }
