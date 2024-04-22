@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    // TODO: store in env variable
+    // TODO: store constants in env variables
     private static final String SECRET_KEY = "66dfee22ad766cb490a9ce47ff3af2b517f3e9fcc7352f96c2c7f6a200cb4c5326298045f89f1449f7e2f36cfbdf5b98fa37282b9e7a487fa6688b4d19f5ddbb";
-    private static final int EXPIRATION_TIME_IN_MS = 60000;
+    private static final int EXPIRATION_TIME_IN_MS = 86400000; // 1 Day
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
