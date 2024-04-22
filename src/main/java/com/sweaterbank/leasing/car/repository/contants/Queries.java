@@ -52,8 +52,8 @@ public class Queries
     public static final String GET_ALL_LEASING_QUERY =
             """
                     SELECT *, Obligation.id AS obligation_id
-                    FROM Leasing, Obligation
-                    WHERE Leasing.id = Obligation.leasing_id
+                    FROM Leasing
+                    LEFT JOIN Obligation ON Leasing.id = Obligation.leasing_id
                     ORDER BY Leasing.id
             """;
 

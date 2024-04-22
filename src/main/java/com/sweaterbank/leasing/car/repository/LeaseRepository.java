@@ -115,7 +115,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return new MapSqlParameterSource()
                 .addValue("id", obligationId)
                 .addValue("leasing_id", leaseId)
-                .addValue("obligation_type", obligationType)
+                .addValue("obligation_type", obligationType.toString())
                 .addValue("outstanding_debt", obligationOutstanding)
                 .addValue("monthly_payment", monthlyPayment);
     }
@@ -151,7 +151,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
                     leases.add(currentLease);
                 }
 
-                if (currentLease != null) {
+                if (currentLease != null && resultSet.getString("obligation_id") != null) {
                     currentLease.addObligation(obligationMapper.mapRow(resultSet, obligationIdx++));
                 }
             }
