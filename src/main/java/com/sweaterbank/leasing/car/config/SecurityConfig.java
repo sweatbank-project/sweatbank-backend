@@ -45,15 +45,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // TODO: set permissions to private endpoints
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorizeRequests) -> {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
-                authorizeRequests.requestMatchers("api/lease/create").permitAll();
-                authorizeRequests.requestMatchers("api/admin/leases").permitAll();
+                authorizeRequests.requestMatchers("api/admin/**").hasAuthority("admin");
                 authorizeRequests.anyRequest().authenticated();
             })
             .cors(withDefaults())
