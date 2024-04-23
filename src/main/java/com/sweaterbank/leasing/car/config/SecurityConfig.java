@@ -4,6 +4,7 @@ import com.sweaterbank.leasing.car.repository.UserRepository;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
+import com.sweaterbank.leasing.car.services.JwtService;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,11 @@ public class SecurityConfig {
     public SecurityConfig(Environment environment, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.environment = environment;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    @Bean
+    public JwtService jwtService(){
+        return new JwtService();
     }
 
     @Bean
@@ -102,7 +108,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+        return new JwtAuthenticationFilter(jwtService(), userDetailsService());
     }
 
     @Bean

@@ -1,9 +1,13 @@
 package com.sweaterbank.leasing.car.services;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,14 +17,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    // TODO: store in env variable
-    private static final String SECRET_KEY = "66dfee22ad766cb490a9ce47ff3af2b517f3e9fcc7352f96c2c7f6a200cb4c5326298045f89f1449f7e2f36cfbdf5b98fa37282b9e7a487fa6688b4d19f5ddbb";
-    private static final int EXPIRATION_TIME_IN_MS = 60000;
+
+    @Value("${sweatbank-backend.secret-key}")
+    private  String SECRET_KEY;
+    @Value("${sweatbank-backend.expiration-time-ms}")
+    private int EXPIRATION_TIME_IN_MS;
+
+
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
