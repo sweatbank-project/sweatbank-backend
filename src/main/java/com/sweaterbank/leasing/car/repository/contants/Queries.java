@@ -77,4 +77,11 @@ public class Queries
             """
                 SELECT COUNT(application_id) FROM Leasing
             """;
+
+    public static final String UPDATE_LEASE_QUERY =
+            """
+                UPDATE Leasing
+                SET status = :status
+                WHERE id = :id
+            """;
 }
