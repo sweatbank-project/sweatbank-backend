@@ -49,7 +49,7 @@ public class User implements UserDetails {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
         if (role != null) {
-            authorities.add(new SimpleGrantedAuthority(role.toString())); // Assuming role names are prefixed with "ROLE_"
+            authorities.add(new SimpleGrantedAuthority(role.toString()));
         }
 
         return authorities;

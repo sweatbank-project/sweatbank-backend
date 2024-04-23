@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -51,15 +50,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // TODO: set permissions to private endpoints
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorizeRequests) -> {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
-                authorizeRequests.requestMatchers("api/lease/create").permitAll();
-                authorizeRequests.requestMatchers("api/admin/leases").permitAll();
+                authorizeRequests.requestMatchers("api/admin/**").hasAuthority("admin");
                 authorizeRequests.anyRequest().authenticated();
             })
             .cors(withDefaults())
