@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.advice;
 
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
+import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
 import jakarta.validation.ValidationException;
@@ -62,5 +63,13 @@ public class GlobalExceptionHandler {
         }
 
         return new ResponseEntity<>(body, headers, status);
+    }
+
+    @ExceptionHandler(InvalidStatusException.class)
+    public ResponseEntity<ApiError> handleInvalidStatusException(InvalidStatusException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

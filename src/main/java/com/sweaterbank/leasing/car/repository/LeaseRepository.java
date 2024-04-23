@@ -1,7 +1,10 @@
 package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.model.*;
+import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
+import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.Leasing;
+import com.sweaterbank.leasing.car.model.ObligationType;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
@@ -13,7 +16,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class LeaseRepository implements LeaseRepositoryInterface
@@ -44,7 +50,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
                 .addValue("application_id", leaseApplicationId)
-                .addValue("status", Status.PENDING.toString())
+                .addValue("status", ApplicationStatus.NEW.toString())
                 .addValue("car_brand", requestData.makes())
                 .addValue("car_model", requestData.models())
                 .addValue("manufacture_year", Integer.parseInt(requestData.yearOfManufacture()))
@@ -180,5 +186,14 @@ public class LeaseRepository implements LeaseRepositoryInterface
 
             return leases;
         });
+    }
+
+    public void updateLease(String leaseId, String status) throws DataAccessException, InvalidStatusException {
+
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", leaseId)
+                .addValue("status", status);
+
+        namedParameterJdbcTemplate.update(Queries.UPDATE_LEASE_QUERY, params);
     }
 }

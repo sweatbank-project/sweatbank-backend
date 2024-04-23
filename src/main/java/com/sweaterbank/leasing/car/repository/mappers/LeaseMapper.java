@@ -4,7 +4,7 @@ import com.sweaterbank.leasing.car.model.BusinessAreaType;
 import com.sweaterbank.leasing.car.model.EducationType;
 import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.Leasing;
-import com.sweaterbank.leasing.car.model.LeasingStatus;
+import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.MaritalStatus;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -20,7 +20,7 @@ public class LeaseMapper implements RowMapper<Leasing>
         return new Leasing(
                 resultSet.getString("id"),
                 resultSet.getString("application_id"),
-                LeasingStatus.valueOf(resultSet.getString("status").toUpperCase()),
+                ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
                 resultSet.getString("car_brand"),
                 resultSet.getString("car_model"),
                 resultSet.getInt("manufacture_year"),
