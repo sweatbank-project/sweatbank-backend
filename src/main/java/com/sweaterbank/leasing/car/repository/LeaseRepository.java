@@ -4,9 +4,11 @@ import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.Leasing;
+import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.ObligationType;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,23 +30,25 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
     private final LeaseMapper leaseMapper;
+    private final LeaseWithUserInfoMapper leaseWithUserInfoMapper;
     private final ObligationMapper obligationMapper;
 
     private final String INITIALS_ID = "SB";
     private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
     private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, ObligationMapper obligationMapper)
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
         this.leaseMapper = leaseMapper;
         this.obligationMapper = obligationMapper;
+        this.leaseWithUserInfoMapper = leaseWUIMapper;
     }
 
     @Override
-    public void createLease(CreateLeaseRequest requestData) {
-        String leaseId = UUID.randomUUID().toString();
+    public void createLease(CreateLeaseRequest requestData, String leaseId) {
+
         String leaseApplicationId = generateApplicationId();
 
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
@@ -186,6 +190,59 @@ public class LeaseRepository implements LeaseRepositoryInterface
 
             return leases;
         });
+    }
+
+    @Override
+    public List<LeasingWithUserDetail> getAllLeasesWithUserDetails() throws DataAccessException
+    {
+        return namedParameterJdbcTemplate.query(Queries.GET_ALL_LEASINGS_WITH_USER_INFO_QUERY, resultSet ->
+        {
+            List<LeasingWithUserDetail> leases = new ArrayList<>();
+
+            String leaseId = null;
+            LeasingWithUserDetail currentLease = null;
+            int leaseIdx = 0;
+            int obligationIdx = 0;
+
+            while (resultSet.next()) {
+                if (currentLease == null || !leaseId.equals(resultSet.getString("lease_id"))) {
+                    leaseId = resultSet.getString("lease_id");
+                    currentLease = leaseWithUserInfoMapper.mapRow(resultSet, leaseIdx++);
+                    obligationIdx = 0;
+                    leases.add(currentLease);
+                }
+
+                if (currentLease != null && resultSet.getString("obligation_id") != null) {
+                    currentLease.addObligation(obligationMapper.mapRow(resultSet, obligationIdx++));
+                }
+            }
+
+            return leases;
+        });
+    }
+    @Override
+    public void saveUserIdWithLeaseId(String userId, String leaseId){
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("user_id", userId)
+                .addValue("lease_id", leaseId);
+        namedParameterJdbcTemplate.update(Queries.SAVE_USER_ID_WITH_APPLICATION_ID_QUERY, params);
+    }
+
+    @Override
+    public Integer getAmountOfPendingLeases(String userId){
+        return countingLeasesStatus(Queries.GET_PENDING_STATUS_COUNT_BY_ID_QUERY, userId);
+    }
+
+    @Override
+    public Integer getAmountOfNewLeases(String userId){
+        return countingLeasesStatus(Queries.GET_NEW_STATUS_COUNT_BY_ID_QUERY, userId);
+    }
+
+    private Integer countingLeasesStatus(String query, String userId){
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("user_id", userId);
+
+        return namedParameterJdbcTemplate.queryForObject(query, param, Integer.class);
     }
 
     public void updateLease(String leaseId, String status) throws DataAccessException, InvalidStatusException {

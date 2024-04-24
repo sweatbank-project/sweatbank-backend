@@ -42,6 +42,14 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     @Override
+    public String selectUserIdByEmail(String username){
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("username", username);
+
+        return namedParameterJdbcTemplate.queryForObject(Queries.SELECT_USER_ID_BY_EMAIL_QUERY, params, String.class);
+    }
+
+    @Override
     public void saveUser(RegisterRequest request) {
         String generatedUUID = UUID.randomUUID().toString();
         String encodedPassword = passwordEncoder.encode(request.password());

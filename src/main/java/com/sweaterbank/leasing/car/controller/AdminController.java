@@ -1,9 +1,9 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.GetLeasesResponse;
+import com.sweaterbank.leasing.car.controller.dto.GetLeasesWithUserDetailsResponse;
 import com.sweaterbank.leasing.car.controller.dto.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
-import com.sweaterbank.leasing.car.model.Leasing;
+import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.services.LeaseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,10 +30,10 @@ public class AdminController {
     }
 
     @GetMapping("leases")
-    public ResponseEntity<GetLeasesResponse> getAllLeases() {
-        List<Leasing> leases = leaseService.getLeases();
+    public ResponseEntity<GetLeasesWithUserDetailsResponse> getAllLeases() {
+        List<LeasingWithUserDetail> leases = leaseService.getLeasesWithUserDetails();
 
-        return ResponseEntity.ok(new GetLeasesResponse(leases));
+        return ResponseEntity.ok(new GetLeasesWithUserDetailsResponse(leases));
     }
 
     @PutMapping("leases/update-status/{id}")
