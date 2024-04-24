@@ -12,7 +12,7 @@ public class ObligationMapper implements RowMapper<Obligation> {
     public Obligation mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Obligation(
                 resultSet.getString("obligation_id"),
-                resultSet.getString("leasing_id"),
+                resultSet.getString("lease_id"),
                 ObligationType.fromString(resultSet.getString("obligation_type")),
                 resultSet.getBigDecimal("outstanding_debt"),
                 resultSet.getBigDecimal("monthly_payment")

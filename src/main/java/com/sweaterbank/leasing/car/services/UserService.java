@@ -31,13 +31,21 @@ public class UserService implements UserDetailsService
     private final static String USER_NOT_FOUND_MSG = "Could not find user with email: %s.";
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
+    public User loadUserByUsername(String email) throws UsernameNotFoundException
     {
         Optional<User> receivedUser = userRepository.selectUserByEmail(email);
         if (receivedUser.isPresent()){
             return receivedUser.get();
         } else {
             throw new UsernameNotFoundException(USER_NOT_FOUND_MSG.formatted(email));
+        }
+    }
+    public String getUserIdByUsername(String email) throws UsernameNotFoundException{
+        String userId = userRepository.selectUserIdByEmail(email);
+        if(!userId.isEmpty() || !userId.isBlank()){
+            return userId;
+        }else {
+            throw new UsernameNotFoundException("Invalid provided credentials");
         }
     }
 

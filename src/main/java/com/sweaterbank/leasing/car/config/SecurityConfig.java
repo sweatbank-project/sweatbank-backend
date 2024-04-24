@@ -2,6 +2,7 @@ package com.sweaterbank.leasing.car.config;
 
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.JwtService;
@@ -52,6 +53,7 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
+                authorizeRequests.requestMatchers("api/lease/create").hasAuthority("user");
                 authorizeRequests.requestMatchers("api/admin/**").hasAuthority("admin");
                 authorizeRequests.anyRequest().authenticated();
             })
@@ -126,6 +128,9 @@ public class SecurityConfig {
 
     @Bean
     public LeaseMapper leaseMapper() { return new LeaseMapper(); }
+
+    @Bean
+    public LeaseWithUserInfoMapper leaseWithUserInfoMapper(){return new LeaseWithUserInfoMapper();}
 
     @Bean
     public ObligationMapper obligationMapper() { return new ObligationMapper(); }

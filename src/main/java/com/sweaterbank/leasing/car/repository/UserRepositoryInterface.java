@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface UserRepositoryInterface {
 
     Optional<User> selectUserByEmail(String email);
+    String selectUserIdByEmail(String username);
     void saveUser(RegisterRequest request);
 }
