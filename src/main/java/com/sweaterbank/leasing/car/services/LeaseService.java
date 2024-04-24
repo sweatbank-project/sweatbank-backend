@@ -20,7 +20,8 @@ public class LeaseService
         this.leaseRepository = leaseRepository;
     }
 
-    public void createLease(CreateLeaseRequest requestData) throws HttpClientErrorException {
+    public void createLease(CreateLeaseRequest requestData) throws HttpClientErrorException
+    {
         leaseRepository.createLease(requestData);
     }
 
