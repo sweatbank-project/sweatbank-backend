@@ -6,6 +6,7 @@ import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,12 +20,18 @@ public class LeaseRepository implements LeaseRepositoryInterface
 {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final LeaseMapper leaseMapper;
     private final ObligationMapper obligationMapper;
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, LeaseMapper leaseMapper, ObligationMapper obligationMapper)
+    private final String INITIALS_ID = "SB";
+    private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
+    private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
+
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, ObligationMapper obligationMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
         this.leaseMapper = leaseMapper;
         this.obligationMapper = obligationMapper;
     }
@@ -32,9 +39,11 @@ public class LeaseRepository implements LeaseRepositoryInterface
     @Override
     public void createLease(CreateLeaseRequest requestData) {
         String leaseId = UUID.randomUUID().toString();
+        String leaseApplicationId = generateApplicationId();
 
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
+                .addValue("application_id", leaseApplicationId)
                 .addValue("status", Status.PENDING.toString())
                 .addValue("car_brand", requestData.makes())
                 .addValue("car_model", requestData.models())
@@ -129,6 +138,19 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return namedParameterJdbcTemplate.query(Queries.GET_LEASING_QUERY, params, leaseMapper)
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public String generateApplicationId() {
+        Integer currentCount = jdbcTemplate.queryForObject(Queries.GET_LEASES_COUNT_QUERY, Integer.class);
+        if (currentCount != null) {
+            currentCount++;
+
+            int totalIntLength = String.valueOf(MAX_NUMBER_EXCLUSIVE_ID - 1).length();
+            return INITIALS_ID + String.format("%0" + totalIntLength + "d", currentCount);
+        }
+
+        return DEFAULT_APPLICATION_ID;
     }
 
     @Override

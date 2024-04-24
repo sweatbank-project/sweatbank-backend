@@ -11,6 +11,7 @@ public interface LeaseRepositoryInterface
 
     void createLease(CreateLeaseRequest requestData);
     void createObligations(CreateLeaseRequest requestData, String leaseId);
+    String generateApplicationId();
     Optional<Leasing> getLeaseById(String leaseId);
     Collection<Leasing> getAllLeases();
 }
