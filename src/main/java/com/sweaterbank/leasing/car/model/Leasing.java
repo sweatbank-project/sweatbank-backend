@@ -7,6 +7,7 @@ import java.util.List;
 
 public record Leasing(
         String id,
+        String applicationId,
         LeasingStatus status,
         String carBrand,
         String carModel,

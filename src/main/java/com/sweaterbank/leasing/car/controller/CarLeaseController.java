@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.controller;
 
 import com.sweaterbank.leasing.car.controller.dto.*;
+import com.sweaterbank.leasing.car.exceptions.ApplicationIdExistsException;
 import com.sweaterbank.leasing.car.services.LeaseService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class CarLeaseController
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CreateLeaseRequest requestData) {
+    public void create(@Valid @RequestBody CreateLeaseRequest requestData) throws ApplicationIdExistsException {
         leaseService.createLease(requestData);
     }
 }

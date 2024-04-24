@@ -19,6 +19,7 @@ public class LeaseMapper implements RowMapper<Leasing>
     {
         return new Leasing(
                 resultSet.getString("id"),
+                resultSet.getString("application_id"),
                 LeasingStatus.valueOf(resultSet.getString("status").toUpperCase()),
                 resultSet.getString("car_brand"),
                 resultSet.getString("car_model"),

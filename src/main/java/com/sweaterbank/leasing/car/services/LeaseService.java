@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.services;
 
 import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.exceptions.ApplicationIdExistsException;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import org.springframework.dao.DataAccessException;
@@ -20,7 +21,8 @@ public class LeaseService
         this.leaseRepository = leaseRepository;
     }
 
-    public void createLease(CreateLeaseRequest requestData) throws HttpClientErrorException {
+    public void createLease(CreateLeaseRequest requestData) throws HttpClientErrorException, ApplicationIdExistsException
+    {
         leaseRepository.createLease(requestData);
     }
 

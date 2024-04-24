@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.exceptions.ApplicationIdExistsException;
 import com.sweaterbank.leasing.car.model.*;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
@@ -22,6 +23,11 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final LeaseMapper leaseMapper;
     private final ObligationMapper obligationMapper;
 
+    private final String INITIALS_ID = "SB";
+    private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
+    private final int MAX_RETRIES_GENERATE_ID = 100000000;
+    private final int NUMBER_OF_DIGITS_ID = 8;
+
     public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, LeaseMapper leaseMapper, ObligationMapper obligationMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -30,11 +36,13 @@ public class LeaseRepository implements LeaseRepositoryInterface
     }
 
     @Override
-    public void createLease(CreateLeaseRequest requestData) {
+    public void createLease(CreateLeaseRequest requestData) throws ApplicationIdExistsException {
         String leaseId = UUID.randomUUID().toString();
+        String leaseApplicationId = generateApplicationId();
 
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
+                .addValue("application_id", leaseApplicationId)
                 .addValue("status", Status.PENDING.toString())
                 .addValue("car_brand", requestData.makes())
                 .addValue("car_model", requestData.models())
@@ -129,6 +137,29 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return namedParameterJdbcTemplate.query(Queries.GET_LEASING_QUERY, params, leaseMapper)
                 .stream()
                 .findFirst();
+    }
+
+    public String generateApplicationId() throws ApplicationIdExistsException {
+        Random random = new Random();
+
+        int retries = 0;
+        while (retries < MAX_RETRIES_GENERATE_ID) {
+            int randomInt = random.nextInt(MAX_NUMBER_EXCLUSIVE_ID);
+            int totalIntLength = String.valueOf(MAX_NUMBER_EXCLUSIVE_ID - 1).length();
+            String applicationId = INITIALS_ID + String.format("%0" + totalIntLength + "d", randomInt);
+
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("application_id", applicationId);
+
+            boolean isIdUnique = namedParameterJdbcTemplate.queryForList(Queries.APPLICATION_ID_EXISTS_QUERY, params).isEmpty();
+            if (isIdUnique) {
+                return applicationId;
+            }
+
+            retries++;
+        }
+
+        throw new ApplicationIdExistsException();
     }
 
     @Override
