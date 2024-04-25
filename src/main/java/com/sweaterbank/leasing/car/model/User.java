@@ -85,5 +85,25 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 }
 
