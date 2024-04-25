@@ -21,7 +21,16 @@ public record Leasing(
         MaritalStatus maritalStatus,
         int numberOfChildren,
         BigDecimal monthlyIncomeAfterTaxes,
+
+        int downPaymentPercentage,
+        BigDecimal contractFee,
+        EuriborType euriborType,
+        BigDecimal euriborRate,
+        BigDecimal margin,
+        BigDecimal interestRate,
+        BigDecimal monthlyPayment,
         List<Obligation> obligations
+
 ) {
     public void addObligation(Obligation obligation) {
         this.obligations.add(obligation);

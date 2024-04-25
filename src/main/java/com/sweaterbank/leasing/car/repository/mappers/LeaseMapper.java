@@ -2,6 +2,7 @@ package com.sweaterbank.leasing.car.repository.mappers;
 
 import com.sweaterbank.leasing.car.model.BusinessAreaType;
 import com.sweaterbank.leasing.car.model.EducationType;
+import com.sweaterbank.leasing.car.model.EuriborType;
 import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
@@ -36,6 +37,13 @@ public class LeaseMapper implements RowMapper<Leasing>
                 MaritalStatus.fromString(resultSet.getString("marital_status")),
                 resultSet.getInt("number_of_children"),
                 resultSet.getBigDecimal("monthly_income_after_taxes"),
+                resultSet.getInt("down_payment_percentage"),
+                resultSet.getBigDecimal("contract_fee"),
+                EuriborType.valueOf(resultSet.getString("euribor_type").toUpperCase()),
+                resultSet.getBigDecimal("euribor_rate"),
+                resultSet.getBigDecimal("margin"),
+                resultSet.getBigDecimal("interest_rate"),
+                resultSet.getBigDecimal("monthly_payment"),
                 new ArrayList<>()
         );
     }
