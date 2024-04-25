@@ -64,26 +64,62 @@ public class Queries
 
     public static final String GET_ALL_LEASINGS_WITH_USER_INFO_QUERY =
             """     
-                    SELECT user_id, users.username, users.first_name, users.last_name, users.phone_number, users.personal_id,
-                    lease_id, leasing.application_id, leasing.status, leasing.car_brand, leasing.car_model, leasing.manufacture_year, leasing.car_cost, leasing.leasing_period,
-                    leasing.car_seller_name, leasing.education, leasing.held_position, leasing.job_title, leasing.time_employed, leasing.employer_business_area,
-                    leasing.marital_status, leasing.number_of_children, leasing.monthly_income_after_taxes, leasing.creation_date,
-                    obligation.id AS obligation_id, obligation.obligation_type, obligation.outstanding_debt, obligation.monthly_payment
-                    FROM user_leases
-                    INNER JOIN users ON user_id = users.id
-                    INNER JOIN leasing ON user_leases.lease_id = leasing.id
-                    LEFT JOIN obligation ON leasing.id = obligation.leasing_id
+                          
+                    SELECT
+                       user_id,
+                       users.username,
+                       users.first_name,
+                       users.last_name,
+                       users.phone_number,
+                       users.personal_id,
+                       lease_id,
+                       leasing.application_id,
+                       leasing.status,
+                       leasing.car_brand,
+                       leasing.car_model,
+                       leasing.manufacture_year,
+                       leasing.car_cost,
+                       leasing.leasing_period,
+                       leasing.car_seller_name,
+                       leasing.education,
+                       leasing.held_position,
+                       leasing.job_title,
+                       leasing.time_employed,
+                       leasing.employer_business_area,
+                       leasing.marital_status,
+                       leasing.number_of_children,
+                       leasing.monthly_income_after_taxes,
+                       leasing.creation_date,
+                       leasing.monthly_payment AS leasing_monthly_payment,
+                       down_payment_percentage,
+                       contract_fee,
+                       euribor_type,
+                       euribor_rate,
+                       margin,
+                       interest_rate,
+                       obligation.monthly_payment AS obligation_monthly_payment,
+                       obligation.id AS obligation_id,
+                       obligation.obligation_type,
+                       obligation.outstanding_debt
+                    FROM
+                        user_leases
+                    INNER JOIN
+                        users ON user_id = users.id
+                    INNER JOIN
+                        leasing ON user_leases.lease_id = leasing.id
+                    LEFT JOIN
+                        obligation ON leasing.id = obligation.leasing_id
             """;
 
     public static final String SAVE_LEASING_QUERY =
-            """
-                    INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, leasing_period, car_seller_name,
-                    education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children,
-                    monthly_income_after_taxes, creation_date)
-                    VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :leasing_period, :car_seller_name,
-                    :education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children,
-                    :monthly_income_after_taxes, :creation_date)
-            """;
+        """
+                INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, leasing_period, car_seller_name,
+                education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children,
+                monthly_income_after_taxes, creation_date, down_payment_percentage, contract_fee, euribor_type, euribor_rate, margin, interest_rate, monthly_payment)
+                VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :leasing_period, :car_seller_name,
+                :education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children,
+                :monthly_income_after_taxes, :creation_date, :down_payment_percentage, :contract_fee, :euribor_type, :euribor_rate, :margin, :interest_rate, :monthly_payment)
+        """;
 
     public static final String SAVE_OBLIGATIONS_QUERY =
             """

@@ -73,7 +73,14 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("marital_status", requestData.maritalStatus())
                 .addValue("number_of_children", requestData.numberOfChildren())
                 .addValue("monthly_income_after_taxes", requestData.monthlyIncomeAfterTaxes())
-                .addValue("creation_date",creationDate);
+                .addValue("creation_date",creationDate)
+                .addValue("down_payment_percentage", Integer.parseInt(requestData.downPaymentPercentage()))
+                .addValue("contract_fee", requestData.contractFee())
+                .addValue("euribor_type", requestData.euriborType())
+                .addValue("euribor_rate", requestData.euriborRate())
+                .addValue("margin", requestData.margin())
+                .addValue("interest_rate", requestData.interestRate())
+                .addValue("monthly_payment", requestData.monthlyPayment());
 
         namedParameterJdbcTemplate.update(Queries.SAVE_LEASING_QUERY, leasingParams);
 
