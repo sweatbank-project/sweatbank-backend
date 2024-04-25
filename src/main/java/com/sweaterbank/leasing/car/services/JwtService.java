@@ -24,8 +24,7 @@ public class JwtService {
     private  String SECRET_KEY;
     @Value("${sweatbank-backend.expiration-time-ms}")
     private int EXPIRATION_TIME_IN_MS;
-
-
+  
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
