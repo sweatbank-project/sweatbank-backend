@@ -1,9 +1,10 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
-import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
 import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.controller.dto.RegisterResponse;
+import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
+import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
+import com.sweaterbank.leasing.car.controller.dto.UserDto;
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.Roles;
@@ -19,7 +20,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,26 +45,15 @@ public class AuthController
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest requestData) throws BadCredentialsException
     {
         try {
-            Authentication authenticate = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(
-                                    requestData.username(), requestData.password()
-                            )
-                    );
+            Authentication authenticate = userService.authenticateUser(requestData, authenticationManager);
             User user = (User) authenticate.getPrincipal();
-
-            String role = Roles.USER.toString();
-            Optional<? extends GrantedAuthority> optionalAuthority = user.getAuthorities().stream().findFirst();
-            if (optionalAuthority.isPresent()) {
-                role = optionalAuthority.get().getAuthority();
-            }
+            String role = userService.getUserRole(user);
+            UserDto userDto = userService.createUserDto(user);
+            String token = jwtService.generateToken(user);
 
             return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtService.generateToken(user)
-                    )
-                    .body(new LoginResponse(role));
+                    .header(HttpHeaders.AUTHORIZATION, token)
+                    .body(new LoginResponse(role, userDto));
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

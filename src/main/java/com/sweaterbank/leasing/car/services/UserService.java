@@ -1,11 +1,18 @@
 package com.sweaterbank.leasing.car.services;
 
+import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
 import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
+import com.sweaterbank.leasing.car.controller.dto.UserDto;
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
+import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,5 +53,29 @@ public class UserService implements UserDetailsService
         } else {
             throw new AccountExistsException();
         }
+    }
+
+    public Authentication authenticateUser(LoginRequest requestData, AuthenticationManager authenticationManager) {
+        return authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                requestData.username(), requestData.password()
+                        )
+                );
+    }
+
+    public String getUserRole(User user) {
+        String role = Roles.USER.toString();
+        Optional<? extends GrantedAuthority> optionalAuthority = user.getAuthorities().stream().findFirst();
+        if (optionalAuthority.isPresent()) {
+            role = optionalAuthority.get().getAuthority();
+        }
+        return role;
+    }
+
+    public UserDto createUserDto(User user) {
+        return new UserDto(user.getFirstName(), user.getLastName(),
+                user.getUsername(), user.getPhoneNumber(), user.getAddress(),
+                user.getBirthdate());
     }
 }
