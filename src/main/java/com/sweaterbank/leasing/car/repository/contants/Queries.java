@@ -175,4 +175,18 @@ public class Queries
                 INNER JOIN users ON users.id = user_leases.user_id
                 WHERE users.username = :username
             """;
+
+    public static final String GET_LEASE_BY_APPLICATION_ID =
+            """
+                SELECT
+                leasing.monthly_payment,
+                leasing.monthly_income_after_taxes,
+                leasing.number_of_children,
+                leasing.marital_status,
+                SUM(Obligation.monthly_payment) AS obligation_payment
+                FROM leasing
+                LEFT JOIN Obligation ON leasing.id = Obligation.leasing_id
+                WHERE leasing.application_id = :application_id
+                GROUP BY leasing.id
+            """;
 }

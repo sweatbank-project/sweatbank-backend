@@ -5,6 +5,7 @@ import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.controller.dto.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.repository.LeaseRepository;
@@ -12,6 +13,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -54,6 +57,17 @@ public class LeaseService
             leaseRepository.updateLease(leaseId, status.toString());
         } catch (IllegalArgumentException e) {
             throw new InvalidStatusException();
+        }
+    }
+
+    public LeaseDataForCalculations getLeaseById(String id) {
+        Optional<LeaseDataForCalculations> optionalLeaseData = leaseRepository.getLeaseCalculationData(id);
+
+        if (optionalLeaseData.isPresent()) {
+            return optionalLeaseData.get();
+        }
+        else {
+            throw new NoSuchElementException("Not able to receive data from Application ID: " + id);
         }
     }
 }
