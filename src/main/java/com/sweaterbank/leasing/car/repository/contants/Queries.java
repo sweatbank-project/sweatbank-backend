@@ -121,4 +121,12 @@ public class Queries
                 INNER JOIN leasing ON user_leases.lease_id = leasing.id
                 WHERE leasing.status = 'new' AND user_leases.user_id = :user_id
             """;
+
+    public static final String GET_USER_LEASES_QUERY =
+            """
+                SELECT leasing.application_id, leasing.status, leasing.creation_date, users.username FROM leasing
+                INNER JOIN user_leases ON user_leases.lease_id = leasing.id
+                INNER JOIN users ON users.id = user_leases.user_id
+                WHERE users.username = :username
+            """;
 }
