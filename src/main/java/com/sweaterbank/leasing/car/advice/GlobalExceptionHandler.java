@@ -19,6 +19,7 @@ import org.springframework.web.util.WebUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -81,5 +82,13 @@ public class GlobalExceptionHandler {
 
         return handleExceptionInternal(ex, new ApiError(errors),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ApiError> handleNoSuchElementException(NoSuchElementException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }
