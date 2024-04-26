@@ -7,6 +7,8 @@ import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
+import com.sweaterbank.leasing.car.model.UserLease;
+import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,16 +21,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService
 {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final LeaseRepository leaseRepository;
 
     private final static String USER_NOT_FOUND_MSG = "Could not find user with email: %s.";
+
+    public UserService(UserRepository userRepository, LeaseRepository leaseRepository)
+    {
+        this.userRepository = userRepository;
+        this.leaseRepository = leaseRepository;
+    }
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException
@@ -85,5 +94,9 @@ public class UserService implements UserDetailsService
         return new UserDto(user.getFirstName(), user.getLastName(),
                 user.getUsername(), user.getPhoneNumber(), user.getAddress(),
                 user.getBirthdate());
+    }
+
+    public List<UserLease> getUserLeases(String email) {
+        return leaseRepository.getUserLeases(email);
     }
 }

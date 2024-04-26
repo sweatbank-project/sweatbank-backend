@@ -1,15 +1,16 @@
 package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.ObligationType;
+import com.sweaterbank.leasing.car.model.UserLease;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
+import com.sweaterbank.leasing.car.repository.mappers.UserLeaseMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -33,6 +33,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
     private final LeaseMapper leaseMapper;
+    private final UserLeaseMapper userLeaseMapper;
     private final LeaseWithUserInfoMapper leaseWithUserInfoMapper;
     private final ObligationMapper obligationMapper;
 
@@ -40,11 +41,12 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
     private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper)
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
         this.leaseMapper = leaseMapper;
+        this.userLeaseMapper = userLeaseMapper;
         this.obligationMapper = obligationMapper;
         this.leaseWithUserInfoMapper = leaseWUIMapper;
     }
@@ -151,15 +153,11 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("monthly_payment", monthlyPayment);
     }
 
-    @Override
-    public Optional<Leasing> getLeaseById(String leaseId)
-    {
+    public List<UserLease> getUserLeases(String username) throws DataAccessException {
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", leaseId);
+                .addValue("username", username);
 
-        return namedParameterJdbcTemplate.query(Queries.GET_LEASING_QUERY, params, leaseMapper)
-                .stream()
-                .findFirst();
+        return namedParameterJdbcTemplate.query(Queries.GET_USER_LEASES_QUERY, params, userLeaseMapper);
     }
 
     @Override
@@ -257,7 +255,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return namedParameterJdbcTemplate.queryForObject(query, param, Integer.class);
     }
 
-    public void updateLease(String leaseId, String status) throws DataAccessException, InvalidStatusException {
+    public void updateLease(String leaseId, String status) throws DataAccessException {
 
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", leaseId)

@@ -15,7 +15,6 @@ public interface LeaseRepositoryInterface
     void createLease(CreateLeaseRequest requestData, String leaseId) throws PendingLeasesException;
     void createObligations(CreateLeaseRequest requestData, String leaseId);
     String generateApplicationId();
-    Optional<Leasing> getLeaseById(String leaseId);
     Collection<Leasing> getAllLeases();
     Collection<LeasingWithUserDetail> getAllLeasesWithUserDetails();
     void saveUserIdWithLeaseId(String userId, String leaseId);

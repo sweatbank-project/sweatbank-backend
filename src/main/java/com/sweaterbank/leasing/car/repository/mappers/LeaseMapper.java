@@ -7,7 +7,6 @@ import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.Leasing;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.MaritalStatus;
-import com.sweaterbank.leasing.car.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
