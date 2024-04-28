@@ -42,7 +42,8 @@ public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
                 resultSet.getString("personal_id"),
                 fullName,
                 resultSet.getString("username"),
-                resultSet.getString("phone_number")
+                resultSet.getString("phone_number"),
+                resultSet.getTimestamp("creation_date")
         );
     }
 }

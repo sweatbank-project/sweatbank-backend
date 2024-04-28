@@ -67,7 +67,7 @@ public class Queries
                     SELECT user_id, users.username, users.first_name, users.last_name, users.phone_number, users.personal_id,
                     lease_id, leasing.application_id, leasing.status, leasing.car_brand, leasing.car_model, leasing.manufacture_year, leasing.car_cost, leasing.leasing_period,
                     leasing.car_seller_name, leasing.education, leasing.held_position, leasing.job_title, leasing.time_employed, leasing.employer_business_area,
-                    leasing.marital_status, leasing.number_of_children, leasing.monthly_income_after_taxes,
+                    leasing.marital_status, leasing.number_of_children, leasing.monthly_income_after_taxes, leasing.creation_date,
                     obligation.id AS obligation_id, obligation.obligation_type, obligation.outstanding_debt, obligation.monthly_payment
                     FROM user_leases
                     INNER JOIN users ON user_id = users.id
@@ -79,10 +79,10 @@ public class Queries
             """
                     INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, leasing_period, car_seller_name,
                     education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children,
-                    monthly_income_after_taxes)
+                    monthly_income_after_taxes, creation_date)
                     VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :leasing_period, :car_seller_name,
                     :education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children,
-                    :monthly_income_after_taxes)
+                    :monthly_income_after_taxes, :creation_date)
             """;
 
     public static final String SAVE_OBLIGATIONS_QUERY =
