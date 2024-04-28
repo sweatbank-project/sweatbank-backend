@@ -22,7 +22,7 @@ public record RegisterRequest(
         @NotBlank
         @NotNull(message = "Field phone number may not be null")
         String phoneNumber,
-        @Size(min = 9, max = 9)
+        @Size(min = 11, max = 11)
         @NotEmpty
         @NotBlank
         @NotNull(message = "Personal ID may not be null")
