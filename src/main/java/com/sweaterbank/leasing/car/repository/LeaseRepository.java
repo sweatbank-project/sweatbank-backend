@@ -18,6 +18,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +53,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
     public void createLease(CreateLeaseRequest requestData, String leaseId) {
 
         String leaseApplicationId = generateApplicationId();
+        Timestamp creationDate = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("GMT+3")));
 
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
@@ -68,7 +72,8 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("employer_business_area", requestData.businessAreaOfYourEmployer())
                 .addValue("marital_status", requestData.maritalStatus())
                 .addValue("number_of_children", requestData.numberOfChildren())
-                .addValue("monthly_income_after_taxes", requestData.monthlyIncomeAfterTaxes());
+                .addValue("monthly_income_after_taxes", requestData.monthlyIncomeAfterTaxes())
+                .addValue("creation_date",creationDate);
 
         namedParameterJdbcTemplate.update(Queries.SAVE_LEASING_QUERY, leasingParams);
 

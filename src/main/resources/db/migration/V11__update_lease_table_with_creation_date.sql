@@ -1,0 +1,2 @@
+ALTER TABLE Leasing
+ADD COLUMN creation_date TIMESTAMP
