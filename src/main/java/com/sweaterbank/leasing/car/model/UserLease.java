@@ -8,7 +8,7 @@ public record UserLease (
         ApplicationStatus status,
         Date applicationDate,
         String interestBase,
-        float leaseMargin,
+        BigDecimal leaseMargin,
         BigDecimal monthlyPayment,
         BigDecimal borrowedAmount
 ) { }

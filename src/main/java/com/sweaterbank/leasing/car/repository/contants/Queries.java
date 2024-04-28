@@ -160,7 +160,15 @@ public class Queries
 
     public static final String GET_USER_LEASES_QUERY =
             """
-                SELECT leasing.application_id, leasing.status, leasing.creation_date, users.username FROM leasing
+                SELECT
+                    leasing.application_id,
+                    leasing.status,
+                    leasing.creation_date,
+                    leasing.euribor_type,
+                    leasing.euribor_rate,
+                    leasing.monthly_payment,
+                    leasing.car_cost,
+                    users.username FROM leasing
                 INNER JOIN user_leases ON user_leases.lease_id = leasing.id
                 INNER JOIN users ON users.id = user_leases.user_id
                 WHERE users.username = :username

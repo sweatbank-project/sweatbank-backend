@@ -4,7 +4,6 @@ import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.UserLease;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,10 +16,10 @@ public class UserLeaseMapper implements RowMapper<UserLease>
                 resultSet.getString("application_id"),
                 ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
                 resultSet.getDate("creation_date"),
-                "Euribor 6",
-                2f,
-                new BigDecimal(150),
-                new BigDecimal(30000)
+                resultSet.getString("euribor_type"),
+                resultSet.getBigDecimal("euribor_rate"),
+                resultSet.getBigDecimal("monthly_payment"),
+                resultSet.getBigDecimal("car_cost")
         );
     }
 }
