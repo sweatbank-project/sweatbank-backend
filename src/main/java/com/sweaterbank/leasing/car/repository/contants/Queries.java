@@ -92,6 +92,7 @@ public class Queries
                        leasing.monthly_income_after_taxes,
                        leasing.creation_date,
                        leasing.monthly_payment AS leasing_monthly_payment,
+                       leasing.automation_status,
                        down_payment_percentage,
                        contract_fee,
                        euribor_type,
@@ -116,10 +117,10 @@ public class Queries
         """
                 INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, down_payment ,leasing_period, car_seller_name,
                 education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children,
-                monthly_income_after_taxes, creation_date, down_payment_percentage, contract_fee, euribor_type, euribor_rate, margin, interest_rate, monthly_payment)
+                monthly_income_after_taxes, creation_date, down_payment_percentage, contract_fee, euribor_type, euribor_rate, margin, interest_rate, monthly_payment, automation_status)
                 VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :down_payment ,:leasing_period, :car_seller_name,
                 :education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children,
-                :monthly_income_after_taxes, :creation_date, :down_payment_percentage, :contract_fee, :euribor_type, :euribor_rate, :margin, :interest_rate, :monthly_payment)
+                :monthly_income_after_taxes, :creation_date, :down_payment_percentage, :contract_fee, :euribor_type, :euribor_rate, :margin, :interest_rate, :monthly_payment, :automation_status)
         """;
 
     public static final String SAVE_OBLIGATIONS_QUERY =
