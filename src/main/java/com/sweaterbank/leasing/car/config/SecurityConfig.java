@@ -63,7 +63,9 @@ public class SecurityConfig {
                 authorizeRequests.anyRequest().authenticated();
             })
             .cors(withDefaults())
-            .logout(logout -> logout.logoutUrl("api/auth/logout"))
+            .logout(logout -> logout.logoutUrl("api/auth/logout")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true))
             .httpBasic(withDefaults());
 
         // TODO: set unauthorized requests exception handling
