@@ -72,6 +72,7 @@ public class Queries
                        leasing.car_model,
                        leasing.manufacture_year,
                        leasing.car_cost,
+                       leasing.down_payment,
                        leasing.leasing_period,
                        leasing.car_seller_name,
                        leasing.education,
@@ -168,6 +169,22 @@ public class Queries
                 INNER JOIN user_leases ON user_leases.lease_id = leasing.id
                 INNER JOIN users ON users.id = user_leases.user_id
                 WHERE users.username = :username
+            """;
+
+    public static final String GET_DATA_FOR_MAIL_QUERY =
+            """
+                SELECT
+                users.first_name,
+                users.last_name,
+                leasing.car_cost,
+                leasing.down_payment,
+                leasing.margin,
+                leasing.euribor_type,
+                leasing.leasing_period
+                FROM leasing
+                INNER JOIN user_leases ON user_leases.lease_id = leasing.id
+                INNER JOIN users ON user_leases.user_id = users.id
+                WHERE leasing.application_id = :application_id
             """;
 
     public static final String GET_LEASE_BY_APPLICATION_ID =

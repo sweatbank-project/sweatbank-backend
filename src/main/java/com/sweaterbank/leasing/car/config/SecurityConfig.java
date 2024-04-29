@@ -4,6 +4,7 @@ import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
+import com.sweaterbank.leasing.car.repository.mappers.MailDataMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserLeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
@@ -136,7 +137,8 @@ public class SecurityConfig {
                 userLeaseMapper(),
                 leaseWithUserInfoMapper(),
                 obligationMapper(),
-                leaseDataForCalculationsMapper()
+                leaseDataForCalculationsMapper(),
+                mailDataMapper()
         );
     }
 
@@ -150,6 +152,8 @@ public class SecurityConfig {
 
     @Bean
     public LeaseWithUserInfoMapper leaseWithUserInfoMapper(){ return new LeaseWithUserInfoMapper();}
+    @Bean
+    public MailDataMapper mailDataMapper(){ return new MailDataMapper();}
     @Bean
     public LeaseDataForCalculationsMapper leaseDataForCalculationsMapper(){ return new LeaseDataForCalculationsMapper();}
 
