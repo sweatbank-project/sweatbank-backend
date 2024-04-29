@@ -1,11 +1,13 @@
 package com.sweaterbank.leasing.car.services;
 
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
+import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
 import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
 import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
@@ -26,7 +28,6 @@ public class LeaseService
     private final LeaseRepository leaseRepository;
     private final UserService userService;
     private final CalculationService calculationService;
-
     private final BigDecimal APPROVE_MAX_CAR_COST = new BigDecimal(55000);
     private final BigDecimal APPROVE_DOWN_PAYMENT_LOWER_BOUND = new BigDecimal(10);
     private final BigDecimal APPROVE_DOWN_PAYMENT_UPPER_BOUND = new BigDecimal(60);
@@ -41,7 +42,7 @@ public class LeaseService
 
     public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException, InvalidStatusException {
         String userId = userService.getUserIdByUsername(email);
-        if(leaseRepository.getAmountOfPendingLeases(userId) == 0 && leaseRepository.getAmountOfNewLeases(userId) == 0){
+        if(leaseRepository.getAmountOfPendingLeasesByUserId(userId) == 0 && leaseRepository.getAmountOfNewLeasesByUserId(userId) == 0){
             String leaseId = UUID.randomUUID().toString();
 
             ApplicationStatus applicationStatus = automatedDecision(requestData, leaseId);
@@ -95,6 +96,10 @@ public class LeaseService
         return leaseRepository.getAllLeasesWithUserDetails();
     }
 
+    public List<LeaseDateWithCount> getLeaseDatesWithCount(){
+        return leaseRepository.getLeaseDatesWithCount();
+    }
+
     public void updateLease(String leaseId, UpdateLeaseRequest requestData) throws InvalidStatusException {
         try {
             ApplicationStatus status = ApplicationStatus.valueOf(requestData.status().toUpperCase());
@@ -113,5 +118,16 @@ public class LeaseService
         else {
             throw new NoSuchElementException("Not able to receive data from Application ID: " + id);
         }
+    }
+
+    public DashboardResponse getDashboardData(){
+        int countOfNewLeases = leaseRepository.countingAllLeasesByStatus("new");
+        int countOfPendingLeases = leaseRepository.countingAllLeasesByStatus("pending");
+        int countOfApprovedLeases = leaseRepository.countingAllLeasesByStatus("approved");
+        int countOfRejectedLeases = leaseRepository.countingAllLeasesByStatus("rejected");
+        List<LeaseDateWithCount> datesWithCounts = leaseRepository.getLeaseDatesWithCount();
+
+        return new DashboardResponse(countOfNewLeases, countOfPendingLeases, countOfApprovedLeases, countOfRejectedLeases, datesWithCounts);
+
     }
 }

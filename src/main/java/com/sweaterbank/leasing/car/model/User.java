@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class User implements UserDetails {
-
     private final String id;
     private final String username;
     private final String phoneNumber;

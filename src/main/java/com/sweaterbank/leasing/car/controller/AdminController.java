@@ -1,5 +1,6 @@
 package com.sweaterbank.leasing.car.controller;
 
+import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.MailRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.MailResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.ApplicationIdRequest;
@@ -26,12 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-
     private final LeaseService leaseService;
     private final MailSenderService mailService;
     private final JwtService jwtService;
@@ -93,6 +94,12 @@ public class AdminController {
         CalculationResponse calculationResponse = calculationService.calculateLoanServiceRate(leaseDataForCalculations);
 
         return ResponseEntity.ok(calculationResponse);
+    }
+
+    @GetMapping("dashboard")
+    public ResponseEntity<DashboardResponse> getDashboardData(){
+        DashboardResponse dashboardResponse = leaseService.getDashboardData();
+        return ResponseEntity.ok(dashboardResponse);
     }
 
 }
