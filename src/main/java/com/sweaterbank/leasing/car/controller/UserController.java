@@ -26,8 +26,6 @@ public class UserController
     public ResponseEntity<GetUserLeasesResponse> getUserLeases(@PathVariable String email) {
         List<UserLease> userLeases = userService.getUserLeases(email);
 
-        System.out.println("userLeases count: " + userLeases.size());
-
         return ResponseEntity.ok(new GetUserLeasesResponse(userLeases));
     }
 }
