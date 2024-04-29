@@ -65,6 +65,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("car_model", requestData.models())
                 .addValue("manufacture_year", Integer.parseInt(requestData.yearOfManufacture()))
                 .addValue("car_cost", requestData.costOfTheVehicle())
+                .addValue("down_payment", requestData.downPayment())
                 .addValue("leasing_period", Integer.parseInt(requestData.leasingPeriod()))
                 .addValue("car_seller_name", requestData.sellerName())
                 .addValue("education", requestData.education())

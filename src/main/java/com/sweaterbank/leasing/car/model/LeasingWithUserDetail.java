@@ -15,6 +15,7 @@ public record LeasingWithUserDetail(
         String carModel,
         int carManufactureYear,
         BigDecimal carCost,
+        BigDecimal downPayment,
         int leasingPeriod,
         String carSellerName,
         EducationType education,
