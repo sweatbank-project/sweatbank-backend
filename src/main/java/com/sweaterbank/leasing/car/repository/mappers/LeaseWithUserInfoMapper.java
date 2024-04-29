@@ -29,6 +29,7 @@ public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
                 resultSet.getString("car_model"),
                 resultSet.getInt("manufacture_year"),
                 resultSet.getBigDecimal("car_cost"),
+                resultSet.getBigDecimal("down_payment"),
                 resultSet.getInt("leasing_period"),
                 carSeller,
                 EducationType.valueOf(resultSet.getString("education").toUpperCase()),
