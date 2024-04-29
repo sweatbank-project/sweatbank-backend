@@ -4,12 +4,14 @@ import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.MailData;
+import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
 import com.sweaterbank.leasing.car.model.UserLease;
 import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
 import com.sweaterbank.leasing.car.model.enums.ObligationType;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseDateAndCountMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.MailDataMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
@@ -26,6 +28,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,13 +44,14 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final ObligationMapper obligationMapper;
     private final MailDataMapper mailDataMapper;
     private final LeaseDataForCalculationsMapper leaseDataForCalculationsMapper;
+    private final LeaseDateAndCountMapper leaseDateAndCountMapper;
 
     private final String INITIALS_ID = "SB";
     private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
     private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
 
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper, LeaseDataForCalculationsMapper leaseDataForCalculationsMapper, MailDataMapper mailDataMapper)
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper, LeaseDataForCalculationsMapper leaseDataForCalculationsMapper, MailDataMapper mailDataMapper, LeaseDateAndCountMapper leaseDateAndCountMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
@@ -56,6 +60,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
         this.leaseWithUserInfoMapper = leaseWUIMapper;
         this.mailDataMapper = mailDataMapper;
         this.leaseDataForCalculationsMapper = leaseDataForCalculationsMapper;
+        this.leaseDateAndCountMapper = leaseDateAndCountMapper;
     }
 
     @Override
@@ -211,6 +216,26 @@ public class LeaseRepository implements LeaseRepositoryInterface
             return leases;
         });
     }
+
+    @Override
+    public List<LeaseDateWithCount> getLeaseDatesWithCount(){
+        return namedParameterJdbcTemplate.query(Queries.GET_LEASE_DATES_AND_COUNT_QUERY, resultSet -> {
+            List<LeaseDateWithCount> datesAndCount = new ArrayList<>();
+            Date leaseCreationDate = null;
+            LeaseDateWithCount currentDate = null;
+            int leaseIndex = 0;
+
+            while(resultSet.next()){
+                if(currentDate == null || !leaseCreationDate.equals(resultSet.getDate("creation_date"))){
+                    leaseCreationDate = resultSet.getDate("creation_date");
+                    currentDate = leaseDateAndCountMapper.mapRow(resultSet, leaseIndex++);
+                    datesAndCount.add(currentDate);
+                }
+            }
+            return datesAndCount;
+        });
+    }
+
     @Override
     public void saveUserIdWithLeaseId(String userId, String leaseId){
         SqlParameterSource params = new MapSqlParameterSource()
@@ -220,20 +245,28 @@ public class LeaseRepository implements LeaseRepositoryInterface
     }
 
     @Override
-    public Integer getAmountOfPendingLeases(String userId){
-        return countingLeasesStatus(Queries.GET_PENDING_STATUS_COUNT_BY_ID_QUERY, userId);
+    public Integer getAmountOfPendingLeasesByUserId(String userId){
+        return countingLeasesStatusByUserId(Queries.GET_PENDING_STATUS_COUNT_BY_ID_QUERY, userId);
     }
 
     @Override
-    public Integer getAmountOfNewLeases(String userId){
-        return countingLeasesStatus(Queries.GET_NEW_STATUS_COUNT_BY_ID_QUERY, userId);
+    public Integer getAmountOfNewLeasesByUserId(String userId){
+        return countingLeasesStatusByUserId(Queries.GET_NEW_STATUS_COUNT_BY_ID_QUERY, userId);
     }
 
-    private Integer countingLeasesStatus(String query, String userId){
+    private Integer countingLeasesStatusByUserId(String query, String userId){
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("user_id", userId);
 
         return namedParameterJdbcTemplate.queryForObject(query, param, Integer.class);
+    }
+
+    @Override
+    public Integer countingAllLeasesByStatus(String status){
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("status", status);
+
+        return namedParameterJdbcTemplate.queryForObject(Queries.GET_COUNT_OF_ALL_APPLICATIONS_BY_STATUS_QUERY, param, Integer.class);
     }
 
     public void updateLease(String leaseId, String status) throws DataAccessException {
