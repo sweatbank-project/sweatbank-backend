@@ -1,7 +1,6 @@
 package com.sweaterbank.leasing.car.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sweaterbank.leasing.car.model.EuriborType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
