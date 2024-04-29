@@ -4,5 +4,15 @@
       "name": "sweatbank-backend.cors.allowed-origin",
       "type": "java.lang.String",
       "description": "The allowed origin from which request can be made. Used for CORS configuration."
-  }
-] }
+    },
+    {
+      "name": "sweatbank-backend.secret-key",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "sweatbank-backend.expiration-time-ms",
+      "type": "java.lang.Integer",
+      "description": "The allowed origin from which request can be made. Used for CORS configuration."
+    }
+  ] 
+}

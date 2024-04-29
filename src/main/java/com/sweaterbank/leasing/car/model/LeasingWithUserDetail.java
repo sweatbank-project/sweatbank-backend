@@ -1,12 +1,14 @@
 package com.sweaterbank.leasing.car.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public record Leasing(
-        String id,
+public record LeasingWithUserDetail(
         String applicationId,
         ApplicationStatus status,
         String carBrand,
@@ -30,7 +32,13 @@ public record Leasing(
         BigDecimal margin,
         BigDecimal interestRate,
         BigDecimal monthlyPayment,
-        List<Obligation> obligations
+        List<Obligation> obligations,
+        String personalId,
+        String fullName,
+        String email,
+        String phone,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        Timestamp creationDate
 ) {
     public void addObligation(Obligation obligation) {
         this.obligations.add(obligation);

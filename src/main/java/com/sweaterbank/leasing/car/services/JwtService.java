@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    // TODO: store constants in env variables
-    private static final String SECRET_KEY = "66dfee22ad766cb490a9ce47ff3af2b517f3e9fcc7352f96c2c7f6a200cb4c5326298045f89f1449f7e2f36cfbdf5b98fa37282b9e7a487fa6688b4d19f5ddbb";
-    private static final int EXPIRATION_TIME_IN_MS = 86400000; // 1 Day
+
+    @Value("${sweatbank-backend.secret-key}")
+    private  String SECRET_KEY;
+    @Value("${sweatbank-backend.expiration-time-ms}")
+    private int EXPIRATION_TIME_IN_MS;
+
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }

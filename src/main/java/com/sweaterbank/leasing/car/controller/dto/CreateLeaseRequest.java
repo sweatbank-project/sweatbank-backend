@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sweaterbank.leasing.car.model.EuriborType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -81,6 +82,21 @@ public record CreateLeaseRequest(
         BigDecimal otherCreditsOutstanding,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING)
-        BigDecimal otherCreditsMonthlyPayment
+        BigDecimal otherCreditsMonthlyPayment,
+
+        @NotBlank(message = "Field is required")
+        String downPaymentPercentage,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal contractFee,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        String euriborType,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal euriborRate,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal margin,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal interestRate,
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
+        BigDecimal monthlyPayment
 ) {
 }

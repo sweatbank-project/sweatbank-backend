@@ -1,11 +1,11 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
+import com.sweaterbank.leasing.car.model.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.BusinessAreaType;
 import com.sweaterbank.leasing.car.model.EducationType;
 import com.sweaterbank.leasing.car.model.EuriborType;
 import com.sweaterbank.leasing.car.model.HeldPositionType;
-import com.sweaterbank.leasing.car.model.Leasing;
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.MaritalStatus;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -13,13 +13,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class LeaseMapper implements RowMapper<Leasing>
+public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
 {
     @Override
-    public Leasing mapRow(ResultSet resultSet, int rowNum) throws SQLException
+    public LeasingWithUserDetail mapRow(ResultSet resultSet, int rowNum) throws SQLException
     {
-        return new Leasing(
-                resultSet.getString("id"),
+        String fullName = "%s %s".formatted(resultSet.getString("first_name"), resultSet.getString("last_name"));
+        String carSeller = resultSet.getString("car_seller_name").substring(0, 1).toUpperCase() +
+                resultSet.getString("car_seller_name").substring(1);
+
+        return new LeasingWithUserDetail(
                 resultSet.getString("application_id"),
                 ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
                 resultSet.getString("car_brand"),
@@ -27,7 +30,7 @@ public class LeaseMapper implements RowMapper<Leasing>
                 resultSet.getInt("manufacture_year"),
                 resultSet.getBigDecimal("car_cost"),
                 resultSet.getInt("leasing_period"),
-                resultSet.getString("car_seller_name"),
+                carSeller,
                 EducationType.valueOf(resultSet.getString("education").toUpperCase()),
                 HeldPositionType.fromString(resultSet.getString("held_position")),
                 resultSet.getString("job_title"),
@@ -38,12 +41,17 @@ public class LeaseMapper implements RowMapper<Leasing>
                 resultSet.getBigDecimal("monthly_income_after_taxes"),
                 resultSet.getInt("down_payment_percentage"),
                 resultSet.getBigDecimal("contract_fee"),
-                EuriborType.valueOf(resultSet.getString("euribor_type").toUpperCase()),
+                EuriborType.fromString(resultSet.getString("euribor_type")),
                 resultSet.getBigDecimal("euribor_rate"),
                 resultSet.getBigDecimal("margin"),
                 resultSet.getBigDecimal("interest_rate"),
-                resultSet.getBigDecimal("monthly_payment"),
-                new ArrayList<>()
+                resultSet.getBigDecimal("leasing_monthly_payment"),
+                new ArrayList<>(),
+                resultSet.getString("personal_id"),
+                fullName,
+                resultSet.getString("username"),
+                resultSet.getString("phone_number"),
+                resultSet.getTimestamp("creation_date")
         );
     }
 }
