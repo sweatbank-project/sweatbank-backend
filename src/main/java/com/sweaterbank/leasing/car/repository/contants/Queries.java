@@ -47,6 +47,7 @@ public class Queries
                 SELECT id FROM users
                 WHERE username = :username
             """;
+
     public static final String GET_LEASING_QUERY =
             """
                     SELECT * FROM Leasing
@@ -126,6 +127,7 @@ public class Queries
                 INSERT INTO Obligation (id, leasing_id, obligation_type, outstanding_debt, monthly_payment)
                 VALUES (:id, :leasing_id, :obligation_type, :outstanding_debt, :monthly_payment)
             """;
+
     public static final String SAVE_USER_ID_WITH_APPLICATION_ID_QUERY =
             """
                 INSERT INTO user_leases(user_id, lease_id)

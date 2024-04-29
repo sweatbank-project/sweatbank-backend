@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface LeaseRepositoryInterface
 {
-
     void createLease(CreateLeaseRequest requestData, String leaseId) throws PendingLeasesException;
     void createObligations(CreateLeaseRequest requestData, String leaseId);
     String generateApplicationId();

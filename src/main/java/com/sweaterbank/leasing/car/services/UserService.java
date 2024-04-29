@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService
-{
+public class UserService implements UserDetailsService {
+  
     private final UserRepository userRepository;
 
     private final LeaseRepository leaseRepository;
@@ -49,6 +49,7 @@ public class UserService implements UserDetailsService
             throw new UsernameNotFoundException(USER_NOT_FOUND_MSG.formatted(email));
         }
     }
+
     public String getUserIdByUsername(String email) throws UsernameNotFoundException{
         String userId = userRepository.selectUserIdByEmail(email);
         if(!userId.isEmpty() || !userId.isBlank()){

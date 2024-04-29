@@ -1,6 +1,8 @@
 package com.sweaterbank.leasing.car.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 public record Leasing(
@@ -21,7 +23,6 @@ public record Leasing(
         MaritalStatus maritalStatus,
         int numberOfChildren,
         BigDecimal monthlyIncomeAfterTaxes,
-
         int downPaymentPercentage,
         BigDecimal contractFee,
         EuriborType euriborType,
@@ -30,7 +31,6 @@ public record Leasing(
         BigDecimal interestRate,
         BigDecimal monthlyPayment,
         List<Obligation> obligations
-
 ) {
     public void addObligation(Obligation obligation) {
         this.obligations.add(obligation);

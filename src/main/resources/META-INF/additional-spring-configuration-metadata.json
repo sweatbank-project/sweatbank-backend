@@ -14,5 +14,5 @@
       "type": "java.lang.Integer",
       "description": "The allowed origin from which request can be made. Used for CORS configuration."
     }
-
-  ] }
+  ] 
+}

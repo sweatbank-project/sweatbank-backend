@@ -41,6 +41,7 @@ public class LeaseService
     public List<Leasing> getLeases() throws DataAccessException {
         return leaseRepository.getAllLeases();
     }
+
     public List<LeasingWithUserDetail> getLeasesWithUserDetails() throws DataAccessException {
         return leaseRepository.getAllLeasesWithUserDetails();
     }
