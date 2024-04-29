@@ -2,6 +2,7 @@ package com.sweaterbank.leasing.car.advice;
 
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
+import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PendingLeasesException.class)
     public ResponseEntity<ApiError> handlePendingLeasesException(PendingLeasesException ex, WebRequest request){
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(MailDataNotFoundException.class)
+    public ResponseEntity<ApiError> handleMailDataNotFoundException(MailDataNotFoundException ex, WebRequest request){
         List<String> errors = Collections.singletonList(ex.getMessage());
 
         return handleExceptionInternal(ex, new ApiError(errors),

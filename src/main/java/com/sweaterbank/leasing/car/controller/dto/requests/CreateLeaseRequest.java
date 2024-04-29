@@ -82,9 +82,7 @@ public record CreateLeaseRequest(
 
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         BigDecimal otherCreditsMonthlyPayment,
-
-        @NotBlank(message = "Field is required")
-        String downPaymentPercentage,
+        int downPaymentPercentage,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         BigDecimal contractFee,
         @JsonFormat(shape = JsonFormat.Shape.STRING)

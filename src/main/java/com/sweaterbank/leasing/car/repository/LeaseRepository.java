@@ -3,6 +3,7 @@ package com.sweaterbank.leasing.car.repository;
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
+import com.sweaterbank.leasing.car.model.MailData;
 import com.sweaterbank.leasing.car.model.UserLease;
 import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
 import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
@@ -10,6 +11,7 @@ import com.sweaterbank.leasing.car.model.enums.ObligationType;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
+import com.sweaterbank.leasing.car.repository.mappers.MailDataMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserLeaseMapper;
 import org.springframework.dao.DataAccessException;
@@ -37,19 +39,22 @@ public class LeaseRepository implements LeaseRepositoryInterface
     private final UserLeaseMapper userLeaseMapper;
     private final LeaseWithUserInfoMapper leaseWithUserInfoMapper;
     private final ObligationMapper obligationMapper;
+    private final MailDataMapper mailDataMapper;
     private final LeaseDataForCalculationsMapper leaseDataForCalculationsMapper;
 
     private final String INITIALS_ID = "SB";
     private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
     private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper, LeaseDataForCalculationsMapper leaseDataForCalculationsMapper)
+
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper, LeaseDataForCalculationsMapper leaseDataForCalculationsMapper, MailDataMapper mailDataMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
         this.userLeaseMapper = userLeaseMapper;
         this.obligationMapper = obligationMapper;
         this.leaseWithUserInfoMapper = leaseWUIMapper;
+        this.mailDataMapper = mailDataMapper;
         this.leaseDataForCalculationsMapper = leaseDataForCalculationsMapper;
     }
 
@@ -81,7 +86,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("number_of_children", requestData.numberOfChildren())
                 .addValue("monthly_income_after_taxes", requestData.monthlyIncomeAfterTaxes())
                 .addValue("creation_date",creationDate)
-                .addValue("down_payment_percentage", Integer.parseInt(requestData.downPaymentPercentage()))
+                .addValue("down_payment_percentage", requestData.downPaymentPercentage())
                 .addValue("contract_fee", requestData.contractFee())
                 .addValue("euribor_type", requestData.euriborType())
                 .addValue("euribor_rate", requestData.euriborRate())
@@ -238,6 +243,15 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("status", status);
 
         namedParameterJdbcTemplate.update(Queries.UPDATE_LEASE_QUERY, params);
+    }
+
+    public Optional<MailData> getDataForMail(String applicationId){
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("application_id", applicationId);
+
+        return namedParameterJdbcTemplate.query(Queries.GET_DATA_FOR_MAIL_QUERY, params, mailDataMapper)
+                .stream()
+                .findFirst();
     }
 
     public Optional<LeaseDataForCalculations> getLeaseCalculationData(String applicationId) {
