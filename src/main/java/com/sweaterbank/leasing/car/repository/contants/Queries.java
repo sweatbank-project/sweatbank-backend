@@ -55,14 +55,6 @@ public class Queries
                     LIMIT 1
             """;
 
-    public static final String GET_ALL_LEASING_QUERY =
-            """
-                    SELECT *, Obligation.id AS obligation_id
-                    FROM Leasing
-                    LEFT JOIN Obligation ON Leasing.id = Obligation.leasing_id
-                    ORDER BY Leasing.id
-            """;
-
     public static final String GET_ALL_LEASINGS_WITH_USER_INFO_QUERY =
             """     
                           
@@ -94,6 +86,7 @@ public class Queries
                        leasing.monthly_payment AS leasing_monthly_payment,
                        leasing.automation_status,
                        down_payment_percentage,
+                       down_payment,
                        contract_fee,
                        euribor_type,
                        euribor_rate,
