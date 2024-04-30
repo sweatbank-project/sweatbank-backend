@@ -135,10 +135,22 @@ public class Queries
             """;
 
     public static final String UPDATE_LEASE_QUERY =
-            """
+            """                                           
                 UPDATE Leasing
-                SET status = :status
-                WHERE id = :id
+                        SET
+                            status = :status,
+                            down_payment = :down_payment,
+                            down_payment_percentage = :down_payment_percentage,
+                            euribor_rate = :euribor_rate,
+                            euribor_type = :euribor_type,
+                            interest_rate = :interest_rate,
+                            leasing_period = :leasing_period,
+                            margin = :margin,
+                            monthly_payment = :monthly_payment
+                        WHERE
+                            leasing.application_id = :application_id
+                        AND
+                            EXISTS ( SELECT 1 FROM Leasing WHERE leasing.application_id = :application_id )
             """;
 
     public static final String GET_PENDING_STATUS_COUNT_BY_ID_QUERY =

@@ -13,4 +13,14 @@ public enum Roles {
     public String toString(){
         return role;
     }
+
+    public static Roles fromString(String text) throws IllegalArgumentException {
+        for (Roles b : Roles.values()) {
+            if (b.role.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum with text " + text + " was found.");
+    }
 }

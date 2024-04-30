@@ -25,8 +25,8 @@ public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
 
         return new LeasingWithUserDetail(
                 resultSet.getString("application_id"),
-                ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
-                AutomationStatus.valueOf(resultSet.getString("automation_status").toUpperCase()),
+                ApplicationStatus.fromString(resultSet.getString("status")),
+                AutomationStatus.fromString(resultSet.getString("automation_status")),
                 resultSet.getString("car_brand"),
                 resultSet.getString("car_model"),
                 resultSet.getInt("manufacture_year"),
@@ -34,7 +34,7 @@ public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
                 resultSet.getBigDecimal("down_payment"),
                 resultSet.getInt("leasing_period"),
                 carSeller,
-                EducationType.valueOf(resultSet.getString("education").toUpperCase()),
+                EducationType.fromString(resultSet.getString("education")),
                 HeldPositionType.fromString(resultSet.getString("held_position")),
                 resultSet.getString("job_title"),
                 resultSet.getString("time_employed"),

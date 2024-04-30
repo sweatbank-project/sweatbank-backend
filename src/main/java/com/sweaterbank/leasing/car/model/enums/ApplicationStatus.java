@@ -13,4 +13,14 @@ public enum ApplicationStatus {
 
     @Override
     public String toString() { return applicationStatus; }
+
+    public static ApplicationStatus fromString(String text) throws IllegalArgumentException {
+        for (ApplicationStatus b : ApplicationStatus.values()) {
+            if (b.applicationStatus.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum with text " + text + " was found.");
+    }
 }

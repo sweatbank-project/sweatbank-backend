@@ -1,14 +1,20 @@
 package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.BusinessAreaType;
+import com.sweaterbank.leasing.car.model.enums.EducationType;
+import com.sweaterbank.leasing.car.model.enums.EuriborType;
+import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.MailData;
 import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
-import com.sweaterbank.leasing.car.model.UserLease;
-import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
-import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 import com.sweaterbank.leasing.car.model.enums.ObligationType;
+import com.sweaterbank.leasing.car.model.UserLease;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDateAndCountMapper;
@@ -82,12 +88,12 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("down_payment", requestData.downPayment())
                 .addValue("leasing_period", Integer.parseInt(requestData.leasingPeriod()))
                 .addValue("car_seller_name", requestData.sellerName())
-                .addValue("education", requestData.education())
-                .addValue("held_position", requestData.positionHeld())
+                .addValue("education", EducationType.fromString(requestData.education()).toString())
+                .addValue("held_position", HeldPositionType.fromString(requestData.positionHeld()).toString())
                 .addValue("job_title", requestData.jobTitle())
                 .addValue("time_employed", Integer.parseInt(requestData.timeEmployed()))
-                .addValue("employer_business_area", requestData.businessAreaOfYourEmployer())
-                .addValue("marital_status", requestData.maritalStatus())
+                .addValue("employer_business_area", BusinessAreaType.fromString(requestData.businessAreaOfYourEmployer()).toString())
+                .addValue("marital_status", MaritalStatus.fromString(requestData.maritalStatus()).toString())
                 .addValue("number_of_children", requestData.numberOfChildren())
                 .addValue("monthly_income_after_taxes", requestData.monthlyIncomeAfterTaxes())
                 .addValue("creation_date",creationDate)
@@ -269,11 +275,20 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return namedParameterJdbcTemplate.queryForObject(Queries.GET_COUNT_OF_ALL_APPLICATIONS_BY_STATUS_QUERY, param, Integer.class);
     }
 
-    public void updateLease(String leaseId, String status) throws DataAccessException {
+    public void updateLease(UpdateLeaseRequest requestData) throws DataAccessException {
 
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id", leaseId)
-                .addValue("status", status);
+                .addValue("application_id", requestData.applicationId())
+                .addValue("status", ApplicationStatus.fromString(requestData.status()).toString())
+                .addValue("down_payment", requestData.downPayment())
+                .addValue("down_payment_percentage", requestData.downPaymentPercentage())
+                .addValue("euribor_rate", requestData.euriborRate())
+                .addValue("euribor_type", EuriborType.fromString(requestData.euriborType()).toString())
+                .addValue("interest_rate", requestData.interestRate())
+                .addValue("leasing_period", requestData.leasingPeriod())
+                .addValue("margin", requestData.margin())
+                .addValue("monthly_payment", requestData.monthlyPayment());
+
 
         namedParameterJdbcTemplate.update(Queries.UPDATE_LEASE_QUERY, params);
     }

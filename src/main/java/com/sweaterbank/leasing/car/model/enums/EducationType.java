@@ -13,4 +13,13 @@ public enum EducationType {
 
     @Override
     public String toString() { return educationType; }
+    public static EducationType fromString(String text) throws IllegalArgumentException {
+        for (EducationType b : EducationType.values()) {
+            if (b.educationType.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum with text " + text + " was found.");
+    }
 }

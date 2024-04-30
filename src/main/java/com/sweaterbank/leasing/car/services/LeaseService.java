@@ -3,7 +3,6 @@ package com.sweaterbank.leasing.car.services;
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
-import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
@@ -40,12 +39,12 @@ public class LeaseService
         this.calculationService = calculationService;
     }
 
-    public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException, InvalidStatusException {
+    public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException{
         String userId = userService.getUserIdByUsername(email);
         if(leaseRepository.getAmountOfPendingLeasesByUserId(userId) == 0 && leaseRepository.getAmountOfNewLeasesByUserId(userId) == 0){
             String leaseId = UUID.randomUUID().toString();
 
-            ApplicationStatus applicationStatus = automatedDecision(requestData, leaseId);
+            ApplicationStatus applicationStatus = automatedDecision(requestData);
             AutomationStatus automationStatus = applicationStatus == ApplicationStatus.NEW ? AutomationStatus.MANUAL
                     : AutomationStatus.AUTOMATED;
 
@@ -56,7 +55,7 @@ public class LeaseService
         }
     }
 
-    public ApplicationStatus automatedDecision(CreateLeaseRequest request, String leaseId) throws InvalidStatusException
+    public ApplicationStatus automatedDecision(CreateLeaseRequest request)
     {
         if (request.costOfTheVehicle().compareTo(APPROVE_MAX_CAR_COST) > 0) {
             return ApplicationStatus.NEW;
@@ -96,17 +95,8 @@ public class LeaseService
         return leaseRepository.getAllLeasesWithUserDetails();
     }
 
-    public List<LeaseDateWithCount> getLeaseDatesWithCount(){
-        return leaseRepository.getLeaseDatesWithCount();
-    }
-
-    public void updateLease(String leaseId, UpdateLeaseRequest requestData) throws InvalidStatusException {
-        try {
-            ApplicationStatus status = ApplicationStatus.valueOf(requestData.status().toUpperCase());
-            leaseRepository.updateLease(leaseId, status.toString());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidStatusException();
-        }
+    public void updateLease(UpdateLeaseRequest requestData) {
+        leaseRepository.updateLease(requestData);
     }
 
     public LeaseDataForCalculations getLeaseById(String id) {

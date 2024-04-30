@@ -1,7 +1,6 @@
 package com.sweaterbank.leasing.car.controller;
 
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.services.LeaseService;
 import jakarta.validation.Valid;
@@ -25,7 +24,7 @@ public class CarLeaseController
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CreateLeaseRequest requestData, Principal principal) throws PendingLeasesException, InvalidStatusException {
+    public void create(@Valid @RequestBody CreateLeaseRequest requestData, Principal principal) throws PendingLeasesException{
         String email = principal.getName();
         leaseService.createLease(requestData, email);
     }
