@@ -14,7 +14,7 @@ public class UserLeaseMapper implements RowMapper<UserLease>
     {
         return new UserLease(
                 resultSet.getString("application_id"),
-                ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
+                ApplicationStatus.fromString(resultSet.getString("status")),
                 resultSet.getDate("creation_date"),
                 resultSet.getString("euribor_type"),
                 resultSet.getBigDecimal("euribor_rate"),

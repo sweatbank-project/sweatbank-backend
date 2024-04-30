@@ -20,7 +20,7 @@ public class UserMapper implements RowMapper<User> {
                 resultSet.getString("last_name"),
                 resultSet.getDate("birth_date"),
                 resultSet.getString("address"),
-                Roles.valueOf(resultSet.getString("role").toUpperCase()),
+                Roles.fromString(resultSet.getString("role")),
                 resultSet.getTimestamp("account_expiration_date"),
                 resultSet.getBoolean("account_locked"),
                 resultSet.getBoolean("enabled")

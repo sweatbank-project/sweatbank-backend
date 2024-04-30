@@ -10,4 +10,14 @@ public enum AutomationStatus {
 
     @Override
     public String toString() { return automationStatus; }
+
+    public static AutomationStatus fromString(String text) throws IllegalArgumentException {
+        for (AutomationStatus b : AutomationStatus.values()) {
+            if (b.automationStatus.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum with text " + text + " was found.");
+    }
 }

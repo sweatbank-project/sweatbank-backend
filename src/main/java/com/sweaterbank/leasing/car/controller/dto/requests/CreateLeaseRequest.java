@@ -7,50 +7,52 @@ import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 public record CreateLeaseRequest(
+
+        @NotBlank(message = "Make field is required")
         String makes,
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Model field is required")
         String models,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Manufacture year field is required")
         String yearOfManufacture,
 
-        @Min(value = 1, message = "Value must be greater than or equal to 1")
+        @Min(value = 1, message = "Cost of vehicle must be greater than or equal to 1")
         BigDecimal costOfTheVehicle,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Leasing period field is required")
         String leasingPeriod,
 
-        @Min(value = 1, message = "Value must be greater than or equal to 1")
+        @Min(value = 1, message = "Down payment must be greater than or equal to 1")
         BigDecimal downPayment,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Seller name field is required")
         String sellerName,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Education field is required")
         String education,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Position held field is required")
         String positionHeld,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Job title field is required")
         String jobTitle,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Time employed field is required")
         String timeEmployed,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Business area field is required")
         String businessAreaOfYourEmployer,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Marital status field is required")
         String maritalStatus,
 
-        @Min(value = 0, message = "Value must be greater than or equal to 0")
+        @Min(value = 0, message = "Number of children must be greater than or equal to 0")
         Integer numberOfChildren,
 
-        @Min(value = 1, message = "Value must be greater than or equal to 1")
+        @Min(value = 1, message = "Monthly income must be greater than or equal to 1")
         BigDecimal monthlyIncomeAfterTaxes,
 
-        @NotBlank(message = "Field is required")
+        @NotBlank(message = "Obligations field is required")
         String obligations,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -82,6 +84,8 @@ public record CreateLeaseRequest(
 
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         BigDecimal otherCreditsMonthlyPayment,
+
+        @Min(value = 1, message = "Down payment percentage must be greater than or equal to 1")
         int downPaymentPercentage,
         @JsonFormat(shape = JsonFormat.Shape.STRING)
         BigDecimal contractFee,
