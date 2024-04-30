@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.*;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.services.LeaseService;

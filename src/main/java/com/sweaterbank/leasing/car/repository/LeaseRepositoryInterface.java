@@ -1,10 +1,10 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
-import com.sweaterbank.leasing.car.model.AutomationStatus;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
 
 import java.util.Collection;
 

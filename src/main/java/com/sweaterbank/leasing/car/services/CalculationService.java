@@ -1,10 +1,10 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.controller.dto.CalculationResponse;
-import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.model.IncomeDeductionPercentage;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.responses.CalculationResponse;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
-import com.sweaterbank.leasing.car.model.MaritalStatus;
+import com.sweaterbank.leasing.car.model.enums.IncomeDeductionPercentage;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

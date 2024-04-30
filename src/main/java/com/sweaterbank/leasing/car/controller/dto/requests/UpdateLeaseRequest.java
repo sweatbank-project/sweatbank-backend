@@ -1,4 +1,4 @@
-package com.sweaterbank.leasing.car.controller.dto;
+package com.sweaterbank.leasing.car.controller.dto.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

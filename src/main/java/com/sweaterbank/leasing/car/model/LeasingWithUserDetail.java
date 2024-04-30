@@ -1,6 +1,13 @@
 package com.sweaterbank.leasing.car.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.BusinessAreaType;
+import com.sweaterbank.leasing.car.model.enums.EducationType;
+import com.sweaterbank.leasing.car.model.enums.EuriborType;
+import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

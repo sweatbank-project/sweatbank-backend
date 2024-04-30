@@ -1,10 +1,10 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
-import com.sweaterbank.leasing.car.controller.dto.RegisterResponse;
-import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
-import com.sweaterbank.leasing.car.controller.dto.LoginResponse;
 import com.sweaterbank.leasing.car.controller.dto.UserDto;
+import com.sweaterbank.leasing.car.controller.dto.requests.LoginRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.RegisterRequest;
+import com.sweaterbank.leasing.car.controller.dto.responses.LoginResponse;
+import com.sweaterbank.leasing.car.controller.dto.responses.RegisterResponse;
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.model.User;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")

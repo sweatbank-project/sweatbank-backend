@@ -1,4 +1,4 @@
-package com.sweaterbank.leasing.car.controller.dto;
+package com.sweaterbank.leasing.car.controller.dto.responses;
 
 import java.math.BigDecimal;
 

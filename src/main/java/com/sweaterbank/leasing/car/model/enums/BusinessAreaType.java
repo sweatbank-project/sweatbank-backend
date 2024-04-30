@@ -1,4 +1,4 @@
-package com.sweaterbank.leasing.car.model;
+package com.sweaterbank.leasing.car.model.enums;
 
 public enum BusinessAreaType {
     AGRICULTURE_FORESTRY_FISHERY("agricultureForestryFishery"),

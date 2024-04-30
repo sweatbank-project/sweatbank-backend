@@ -1,4 +1,4 @@
-package com.sweaterbank.leasing.car.model;
+package com.sweaterbank.leasing.car.model.enums;
 
 import java.math.BigDecimal;
 
