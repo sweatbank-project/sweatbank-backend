@@ -2,16 +2,12 @@ package com.sweaterbank.leasing.car.config;
 
 import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import com.sweaterbank.leasing.car.repository.UserRepository;
-import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserLeaseMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.JwtService;
-import com.sweaterbank.leasing.car.repository.UserRepository;
-import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
-import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
-import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +18,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -138,10 +133,11 @@ public class SecurityConfig {
         return new LeaseRepository(
                 namedParameterJdbcTemplate,
                 jdbcTemplate,
-                leaseMapper(),
                 userLeaseMapper(),
                 leaseWithUserInfoMapper(),
-                obligationMapper());
+                obligationMapper(),
+                leaseDataForCalculationsMapper()
+        );
     }
 
     @Bean
@@ -153,10 +149,9 @@ public class SecurityConfig {
     public UserLeaseMapper userLeaseMapper() { return new UserLeaseMapper(); }
 
     @Bean
-    public LeaseMapper leaseMapper() { return new LeaseMapper(); }
-
-    @Bean
     public LeaseWithUserInfoMapper leaseWithUserInfoMapper(){ return new LeaseWithUserInfoMapper();}
+    @Bean
+    public LeaseDataForCalculationsMapper leaseDataForCalculationsMapper(){ return new LeaseDataForCalculationsMapper();}
 
     @Bean
     public ObligationMapper obligationMapper() { return new ObligationMapper(); }

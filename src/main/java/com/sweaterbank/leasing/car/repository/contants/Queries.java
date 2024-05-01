@@ -55,14 +55,6 @@ public class Queries
                     LIMIT 1
             """;
 
-    public static final String GET_ALL_LEASING_QUERY =
-            """
-                    SELECT *, Obligation.id AS obligation_id
-                    FROM Leasing
-                    LEFT JOIN Obligation ON Leasing.id = Obligation.leasing_id
-                    ORDER BY Leasing.id
-            """;
-
     public static final String GET_ALL_LEASINGS_WITH_USER_INFO_QUERY =
             """     
                           
@@ -92,7 +84,9 @@ public class Queries
                        leasing.monthly_income_after_taxes,
                        leasing.creation_date,
                        leasing.monthly_payment AS leasing_monthly_payment,
+                       leasing.automation_status,
                        down_payment_percentage,
+                       down_payment,
                        contract_fee,
                        euribor_type,
                        euribor_rate,
@@ -114,12 +108,12 @@ public class Queries
 
     public static final String SAVE_LEASING_QUERY =
         """
-                INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, leasing_period, car_seller_name,
+                INSERT INTO Leasing (id, application_id, status, car_brand, car_model, manufacture_year, car_cost, down_payment ,leasing_period, car_seller_name,
                 education, held_position, job_title, time_employed, employer_business_area, marital_status, number_of_children,
-                monthly_income_after_taxes, creation_date, down_payment_percentage, contract_fee, euribor_type, euribor_rate, margin, interest_rate, monthly_payment)
-                VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :leasing_period, :car_seller_name,
+                monthly_income_after_taxes, creation_date, down_payment_percentage, contract_fee, euribor_type, euribor_rate, margin, interest_rate, monthly_payment, automation_status)
+                VALUES (:id, :application_id, :status, :car_brand, :car_model, :manufacture_year, :car_cost, :down_payment ,:leasing_period, :car_seller_name,
                 :education, :held_position, :job_title, :time_employed, :employer_business_area, :marital_status, :number_of_children,
-                :monthly_income_after_taxes, :creation_date, :down_payment_percentage, :contract_fee, :euribor_type, :euribor_rate, :margin, :interest_rate, :monthly_payment)
+                :monthly_income_after_taxes, :creation_date, :down_payment_percentage, :contract_fee, :euribor_type, :euribor_rate, :margin, :interest_rate, :monthly_payment, :automation_status)
         """;
 
     public static final String SAVE_OBLIGATIONS_QUERY =
@@ -174,5 +168,19 @@ public class Queries
                 INNER JOIN user_leases ON user_leases.lease_id = leasing.id
                 INNER JOIN users ON users.id = user_leases.user_id
                 WHERE users.username = :username
+            """;
+
+    public static final String GET_LEASE_BY_APPLICATION_ID =
+            """
+                SELECT
+                leasing.monthly_payment,
+                leasing.monthly_income_after_taxes,
+                leasing.number_of_children,
+                leasing.marital_status,
+                SUM(Obligation.monthly_payment) AS obligation_payment
+                FROM leasing
+                LEFT JOIN Obligation ON leasing.id = Obligation.leasing_id
+                WHERE leasing.application_id = :application_id
+                GROUP BY leasing.id
             """;
 }

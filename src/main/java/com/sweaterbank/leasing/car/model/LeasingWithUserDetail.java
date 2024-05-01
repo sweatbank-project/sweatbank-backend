@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record LeasingWithUserDetail(
         String applicationId,
         ApplicationStatus status,
+        AutomationStatus automationStatus,
         String carBrand,
         String carModel,
         int carManufactureYear,
         BigDecimal carCost,
+        BigDecimal downPayment,
         int leasingPeriod,
         String carSellerName,
         EducationType education,

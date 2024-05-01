@@ -2,12 +2,13 @@ package com.sweaterbank.leasing.car.repository;
 
 import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
-import com.sweaterbank.leasing.car.model.Leasing;
+import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
+import com.sweaterbank.leasing.car.model.AutomationStatus;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.ObligationType;
 import com.sweaterbank.leasing.car.model.UserLease;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
-import com.sweaterbank.leasing.car.repository.mappers.LeaseMapper;
+import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;
 import com.sweaterbank.leasing.car.repository.mappers.ObligationMapper;
 import com.sweaterbank.leasing.car.repository.mappers.UserLeaseMapper;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,27 +34,28 @@ public class LeaseRepository implements LeaseRepositoryInterface
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate jdbcTemplate;
-    private final LeaseMapper leaseMapper;
     private final UserLeaseMapper userLeaseMapper;
     private final LeaseWithUserInfoMapper leaseWithUserInfoMapper;
     private final ObligationMapper obligationMapper;
+    private final LeaseDataForCalculationsMapper leaseDataForCalculationsMapper;
 
     private final String INITIALS_ID = "SB";
     private final int MAX_NUMBER_EXCLUSIVE_ID = 100000000;
     private final String DEFAULT_APPLICATION_ID = INITIALS_ID + "00000001";
 
-    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, LeaseMapper leaseMapper, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper)
+    public LeaseRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, UserLeaseMapper userLeaseMapper, LeaseWithUserInfoMapper leaseWUIMapper, ObligationMapper obligationMapper, LeaseDataForCalculationsMapper leaseDataForCalculationsMapper)
     {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
-        this.leaseMapper = leaseMapper;
         this.userLeaseMapper = userLeaseMapper;
         this.obligationMapper = obligationMapper;
         this.leaseWithUserInfoMapper = leaseWUIMapper;
+        this.leaseDataForCalculationsMapper = leaseDataForCalculationsMapper;
     }
 
     @Override
-    public void createLease(CreateLeaseRequest requestData, String leaseId) {
+    public void createLease(CreateLeaseRequest requestData, String leaseId, ApplicationStatus applicationStatus,
+                            AutomationStatus automationStatus) {
 
         String leaseApplicationId = generateApplicationId();
         Timestamp creationDate = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("GMT+3")));
@@ -60,11 +63,13 @@ public class LeaseRepository implements LeaseRepositoryInterface
         MapSqlParameterSource leasingParams = new MapSqlParameterSource()
                 .addValue("id", leaseId)
                 .addValue("application_id", leaseApplicationId)
-                .addValue("status", ApplicationStatus.NEW.toString())
+                .addValue("automation_status", automationStatus.toString())
+                .addValue("status", applicationStatus.toString())
                 .addValue("car_brand", requestData.makes())
                 .addValue("car_model", requestData.models())
                 .addValue("manufacture_year", Integer.parseInt(requestData.yearOfManufacture()))
                 .addValue("car_cost", requestData.costOfTheVehicle())
+                .addValue("down_payment", requestData.downPayment())
                 .addValue("leasing_period", Integer.parseInt(requestData.leasingPeriod()))
                 .addValue("car_seller_name", requestData.sellerName())
                 .addValue("education", requestData.education())
@@ -174,35 +179,6 @@ public class LeaseRepository implements LeaseRepositoryInterface
     }
 
     @Override
-    public List<Leasing> getAllLeases() throws DataAccessException
-    {
-        return namedParameterJdbcTemplate.query(Queries.GET_ALL_LEASING_QUERY, resultSet ->
-        {
-            List<Leasing> leases = new ArrayList<>();
-
-            String leaseId = null;
-            Leasing currentLease = null;
-            int leaseIdx = 0;
-            int obligationIdx = 0;
-
-            while (resultSet.next()) {
-                if (currentLease == null || !leaseId.equals(resultSet.getString("id"))) {
-                    leaseId = resultSet.getString("id");
-                    currentLease = leaseMapper.mapRow(resultSet, leaseIdx++);
-                    obligationIdx = 0;
-                    leases.add(currentLease);
-                }
-
-                if (currentLease != null && resultSet.getString("obligation_id") != null) {
-                    currentLease.addObligation(obligationMapper.mapRow(resultSet, obligationIdx++));
-                }
-            }
-
-            return leases;
-        });
-    }
-
-    @Override
     public List<LeasingWithUserDetail> getAllLeasesWithUserDetails() throws DataAccessException
     {
         return namedParameterJdbcTemplate.query(Queries.GET_ALL_LEASINGS_WITH_USER_INFO_QUERY, resultSet ->
@@ -262,5 +238,14 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("status", status);
 
         namedParameterJdbcTemplate.update(Queries.UPDATE_LEASE_QUERY, params);
+    }
+
+    public Optional<LeaseDataForCalculations> getLeaseCalculationData(String applicationId) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("application_id", applicationId);
+
+        return namedParameterJdbcTemplate.query(Queries.GET_LEASE_BY_APPLICATION_ID, params, leaseDataForCalculationsMapper)
+                .stream()
+                .findFirst();
     }
 }

@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
 import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.AutomationStatus;
 import com.sweaterbank.leasing.car.model.BusinessAreaType;
 import com.sweaterbank.leasing.car.model.EducationType;
 import com.sweaterbank.leasing.car.model.EuriborType;
@@ -25,10 +26,12 @@ public class LeaseWithUserInfoMapper implements RowMapper<LeasingWithUserDetail>
         return new LeasingWithUserDetail(
                 resultSet.getString("application_id"),
                 ApplicationStatus.valueOf(resultSet.getString("status").toUpperCase()),
+                AutomationStatus.valueOf(resultSet.getString("automation_status").toUpperCase()),
                 resultSet.getString("car_brand"),
                 resultSet.getString("car_model"),
                 resultSet.getInt("manufacture_year"),
                 resultSet.getBigDecimal("car_cost"),
+                resultSet.getBigDecimal("down_payment"),
                 resultSet.getInt("leasing_period"),
                 carSeller,
                 EducationType.valueOf(resultSet.getString("education").toUpperCase()),

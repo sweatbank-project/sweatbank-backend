@@ -15,7 +15,7 @@ public class ObligationMapper implements RowMapper<Obligation> {
                 resultSet.getString("lease_id"),
                 ObligationType.fromString(resultSet.getString("obligation_type")),
                 resultSet.getBigDecimal("outstanding_debt"),
-                resultSet.getBigDecimal("monthly_payment")
+                resultSet.getBigDecimal("obligation_monthly_payment")
         );
     }
 }
