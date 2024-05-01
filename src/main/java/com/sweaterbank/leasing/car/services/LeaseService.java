@@ -1,14 +1,14 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
-import com.sweaterbank.leasing.car.controller.dto.UpdateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
-import com.sweaterbank.leasing.car.model.AutomationStatus;
-import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
 import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;

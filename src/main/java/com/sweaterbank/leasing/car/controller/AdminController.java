@@ -1,9 +1,9 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.CalculationResponse;
-import com.sweaterbank.leasing.car.controller.dto.GetLeasesWithUserDetailsResponse;
-import com.sweaterbank.leasing.car.controller.dto.ApplicationIdRequest;
-import com.sweaterbank.leasing.car.controller.dto.UpdateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.ApplicationIdRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.responses.CalculationResponse;
+import com.sweaterbank.leasing.car.controller.dto.responses.GetLeasesWithUserDetailsResponse;
 import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;

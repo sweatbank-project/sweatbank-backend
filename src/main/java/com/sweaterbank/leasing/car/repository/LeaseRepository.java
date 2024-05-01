@@ -1,12 +1,12 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
-import com.sweaterbank.leasing.car.model.AutomationStatus;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
-import com.sweaterbank.leasing.car.model.ObligationType;
 import com.sweaterbank.leasing.car.model.UserLease;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.ObligationType;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseDataForCalculationsMapper;
 import com.sweaterbank.leasing.car.repository.mappers.LeaseWithUserInfoMapper;

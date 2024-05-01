@@ -1,5 +1,7 @@
 package com.sweaterbank.leasing.car.model;
 
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
+
 import java.math.BigDecimal;
 
 public record LeaseDataForCalculations(

@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.RegisterRequest;
 import com.sweaterbank.leasing.car.model.User;
 
 import java.util.Optional;

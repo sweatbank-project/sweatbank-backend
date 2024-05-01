@@ -1,9 +1,9 @@
 package com.sweaterbank.leasing.car.model;
 
+import com.sweaterbank.leasing.car.model.enums.Roles;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import org.springframework.security.core.GrantedAuthority;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

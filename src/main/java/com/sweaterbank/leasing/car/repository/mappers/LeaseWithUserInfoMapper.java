@@ -1,13 +1,13 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
-import com.sweaterbank.leasing.car.model.AutomationStatus;
-import com.sweaterbank.leasing.car.model.BusinessAreaType;
-import com.sweaterbank.leasing.car.model.EducationType;
-import com.sweaterbank.leasing.car.model.EuriborType;
-import com.sweaterbank.leasing.car.model.HeldPositionType;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
-import com.sweaterbank.leasing.car.model.MaritalStatus;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.BusinessAreaType;
+import com.sweaterbank.leasing.car.model.enums.EducationType;
+import com.sweaterbank.leasing.car.model.enums.EuriborType;
+import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

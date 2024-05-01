@@ -1,8 +1,8 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
-import com.sweaterbank.leasing.car.model.Roles;
+import com.sweaterbank.leasing.car.controller.dto.requests.RegisterRequest;
 import com.sweaterbank.leasing.car.model.User;
+import com.sweaterbank.leasing.car.model.enums.Roles;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

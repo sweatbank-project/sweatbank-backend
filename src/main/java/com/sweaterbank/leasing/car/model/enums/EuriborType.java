@@ -1,4 +1,4 @@
-package com.sweaterbank.leasing.car.model;
+package com.sweaterbank.leasing.car.model.enums;
 
 public enum EuriborType {
     EURIBOR_3_MONTH("Euribor 3-month"),

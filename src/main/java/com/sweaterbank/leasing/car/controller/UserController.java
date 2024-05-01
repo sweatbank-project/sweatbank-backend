@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.controller;
 
-import com.sweaterbank.leasing.car.controller.dto.GetUserLeasesResponse;
+import com.sweaterbank.leasing.car.controller.dto.responses.GetUserLeasesResponse;
 import com.sweaterbank.leasing.car.model.UserLease;
 import com.sweaterbank.leasing.car.services.UserService;
 import org.springframework.http.ResponseEntity;
