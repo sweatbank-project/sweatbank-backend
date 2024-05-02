@@ -59,6 +59,7 @@ public class SecurityConfig {
                 authorizeRequests.requestMatchers("api/auth/login").permitAll();
                 authorizeRequests.requestMatchers("api/auth/logout").permitAll();
                 authorizeRequests.requestMatchers("api/auth/register").permitAll();
+                authorizeRequests.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                 authorizeRequests.requestMatchers("api/lease/create").hasAuthority("user");
                 authorizeRequests.requestMatchers("api/admin/**").hasAuthority("admin");
                 authorizeRequests.requestMatchers("api/user/**").hasAuthority("user");
