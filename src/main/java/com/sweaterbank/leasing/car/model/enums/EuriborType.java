@@ -1,9 +1,9 @@
 package com.sweaterbank.leasing.car.model.enums;
 
 public enum EuriborType {
-    EURIBOR_3_MONTH("Euribor 3-month"),
-    EURIBOR_6_MONTH("Euribor 6-month"),
-    EURIBOR_12_MONTH("Euribor 12-month");
+    EURIBOR_3_MONTH("EURIBOR_3_MONTH"),
+    EURIBOR_6_MONTH("EURIBOR_6_MONTH"),
+    EURIBOR_12_MONTH("EURIBOR_12_MONTH");
 
     private final String euriborType;
 
