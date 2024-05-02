@@ -9,6 +9,6 @@ public record MailData(
         BigDecimal downPayment,
         BigDecimal margin,
         String euriborType,
-        int leasingPeriod
+        Integer leasingPeriod
 ) {
 }

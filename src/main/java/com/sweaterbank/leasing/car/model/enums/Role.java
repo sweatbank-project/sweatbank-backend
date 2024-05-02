@@ -1,11 +1,11 @@
 package com.sweaterbank.leasing.car.model.enums;
 
-public enum Roles {
+public enum Role {
     ADMIN("admin"),
     USER("user");
 
     private final String role;
-    Roles(String role) {
+    Role(String role) {
         this.role = role;
     }
 
@@ -14,8 +14,8 @@ public enum Roles {
         return role;
     }
 
-    public static Roles fromString(String text) throws IllegalArgumentException {
-        for (Roles b : Roles.values()) {
+    public static Role fromString(String text) throws IllegalArgumentException {
+        for (Role b : Role.values()) {
             if (b.role.equalsIgnoreCase(text)) {
                 return b;
             }

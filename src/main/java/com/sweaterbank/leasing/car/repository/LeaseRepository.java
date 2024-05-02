@@ -1,5 +1,6 @@
 package com.sweaterbank.leasing.car.repository;
 
+import com.fasterxml.uuid.Generators;
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public class LeaseRepository implements LeaseRepositoryInterface
@@ -164,7 +164,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
                                                            ObligationType obligationType,
                                                            BigDecimal obligationOutstanding,
                                                            BigDecimal monthlyPayment) {
-        String obligationId = UUID.randomUUID().toString();
+        String obligationId = Generators.timeBasedEpochGenerator().generate().toString();
 
         return new MapSqlParameterSource()
                 .addValue("id", obligationId)

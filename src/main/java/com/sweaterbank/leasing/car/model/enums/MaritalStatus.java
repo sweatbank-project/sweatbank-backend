@@ -15,9 +15,9 @@ public enum MaritalStatus {
     public String toString() { return maritalStatus; }
 
     public static MaritalStatus fromString(String text) throws IllegalArgumentException {
-        for (MaritalStatus b : MaritalStatus.values()) {
-            if (b.maritalStatus.equalsIgnoreCase(text)) {
-                return b;
+        for (MaritalStatus ms : MaritalStatus.values()) {
+            if (ms.maritalStatus.equalsIgnoreCase(text)) {
+                return ms;
             }
         }
 

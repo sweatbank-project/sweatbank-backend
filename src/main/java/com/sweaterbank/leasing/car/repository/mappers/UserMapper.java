@@ -1,7 +1,7 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
 import com.sweaterbank.leasing.car.model.User;
-import com.sweaterbank.leasing.car.model.enums.Roles;
+import com.sweaterbank.leasing.car.model.enums.Role;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -20,7 +20,7 @@ public class UserMapper implements RowMapper<User> {
                 resultSet.getString("last_name"),
                 resultSet.getDate("birth_date"),
                 resultSet.getString("address"),
-                Roles.fromString(resultSet.getString("role")),
+                Role.fromString(resultSet.getString("role")),
                 resultSet.getTimestamp("account_expiration_date"),
                 resultSet.getBoolean("account_locked"),
                 resultSet.getBoolean("enabled")
