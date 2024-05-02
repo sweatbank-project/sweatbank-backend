@@ -1,5 +1,6 @@
 package com.sweaterbank.leasing.car.services;
 
+import com.fasterxml.uuid.Generators;
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
@@ -18,7 +19,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class LeaseService
@@ -42,7 +42,7 @@ public class LeaseService
     public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException{
         String userId = userService.getUserIdByUsername(email);
         if(leaseRepository.getAmountOfPendingLeasesByUserId(userId) == 0 && leaseRepository.getAmountOfNewLeasesByUserId(userId) == 0){
-            String leaseId = UUID.randomUUID().toString();
+            String leaseId = Generators.timeBasedEpochGenerator().generate().toString();
 
             ApplicationStatus applicationStatus = automatedDecision(requestData);
             AutomationStatus automationStatus = applicationStatus == ApplicationStatus.NEW ? AutomationStatus.MANUAL

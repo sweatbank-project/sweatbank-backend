@@ -4,6 +4,6 @@ import java.util.Date;
 
 public record LeaseDateWithCount(
         Date leaseCreationDate,
-        int countOfLeases
+        Integer countOfLeases
 ) {
 }

@@ -1,6 +1,6 @@
 package com.sweaterbank.leasing.car.model;
 
-import com.sweaterbank.leasing.car.model.enums.Roles;
+import com.sweaterbank.leasing.car.model.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,12 +22,12 @@ public class User implements UserDetails {
     private final String lastName;
     private final Date birthdate;
     private final String address;
-    private final Roles role;
+    private final Role role;
     private final Timestamp accountExpirationDate;
     private final boolean accountLocked;
     private final boolean enabled;
 
-    public User(String id, String username, String phoneNumber, String personalId, String password, String firstName, String lastName, Date birthdate, String address, Roles role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
+    public User(String id, String username, String phoneNumber, String personalId, String password, String firstName, String lastName, Date birthdate, String address, Role role, Timestamp accountExpirationDate, boolean accountLocked, boolean enabled) {
         this.id = id;
         this.username = username;
         this.phoneNumber = phoneNumber;

@@ -19,10 +19,10 @@ public record LeasingWithUserDetail(
         AutomationStatus automationStatus,
         String carBrand,
         String carModel,
-        int carManufactureYear,
+        Integer carManufactureYear,
         BigDecimal carCost,
         BigDecimal downPayment,
-        int leasingPeriod,
+        Integer leasingPeriod,
         String carSellerName,
         EducationType education,
         HeldPositionType heldPosition, // CAN BE NULL
@@ -30,9 +30,9 @@ public record LeasingWithUserDetail(
         String timeEmployed, // CAN BE NULL
         BusinessAreaType employerBusinessArea, // CAN BE NULL
         MaritalStatus maritalStatus,
-        int numberOfChildren,
+        Integer numberOfChildren,
         BigDecimal monthlyIncomeAfterTaxes,
-        int downPaymentPercentage,
+        Integer downPaymentPercentage,
         BigDecimal contractFee,
         EuriborType euriborType,
         BigDecimal euriborRate,

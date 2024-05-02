@@ -49,7 +49,7 @@ public class AdminController {
     }
 
     @PutMapping("leases/update-lease")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void update(@Valid @RequestBody UpdateLeaseRequest requestData) {
         leaseService.updateLease(requestData);
     }
