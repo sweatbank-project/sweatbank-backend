@@ -19,21 +19,23 @@ public class CalculationService {
         BigDecimal monthlyPayment = leaseDataForCalculations.monthlyPayment();
         BigDecimal allObligationPayments = leaseDataForCalculations.allObligationPayments();
 
-        BigDecimal householdExpenditure = calculateHouseholdExpenditure(netIncome, leaseDataForCalculations.maritalStatus().toString(), leaseDataForCalculations.numberOfChildren());
-
-        BigDecimal totalMonthlyPayments = monthlyPayment.add(householdExpenditure);
-
-        if (allObligationPayments != null) {
-            totalMonthlyPayments = totalMonthlyPayments.add(allObligationPayments);
+        if (allObligationPayments == null) {
+            allObligationPayments = BigDecimal.ZERO;
         }
 
-        BigDecimal loanServiceRate = totalMonthlyPayments.divide(netIncome, 2, BigDecimal.ROUND_HALF_UP)
+        BigDecimal householdExpenditure = calculateHouseholdExpenditure(netIncome, leaseDataForCalculations.maritalStatus().toString(), leaseDataForCalculations.numberOfChildren());
+
+        BigDecimal newMonthlyPayment = monthlyPayment.add(allObligationPayments);
+
+        BigDecimal monthlyLivingExpenses = netIncome.subtract(newMonthlyPayment).subtract(householdExpenditure);
+
+        BigDecimal loanServiceRate = allObligationPayments.divide(netIncome, 2, BigDecimal.ROUND_HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
 
-        return new CalculationResponse(loanServiceRate, totalMonthlyPayments);
+        return new CalculationResponse(netIncome, monthlyPayment, allObligationPayments, newMonthlyPayment, householdExpenditure, monthlyLivingExpenses, loanServiceRate);
     }
 
-    private BigDecimal calculateHouseholdExpenditure(BigDecimal netIncome, String maritalStatus, int numberOfChildren) {
+    BigDecimal calculateHouseholdExpenditure(BigDecimal netIncome, String maritalStatus, int numberOfChildren) {
         IncomeDeductionPercentage deductionPercentage = IncomeDeductionPercentage.fromMaritalStatusAndChildren(maritalStatus, numberOfChildren);
         BigDecimal percentage = deductionPercentage.getPercentage();
 
