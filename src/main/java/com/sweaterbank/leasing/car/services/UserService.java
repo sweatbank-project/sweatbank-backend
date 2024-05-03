@@ -1,13 +1,13 @@
 package com.sweaterbank.leasing.car.services;
 
-import com.sweaterbank.leasing.car.controller.dto.LoginRequest;
-import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
 import com.sweaterbank.leasing.car.controller.dto.UserDto;
+import com.sweaterbank.leasing.car.controller.dto.requests.LoginRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.RegisterRequest;
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
-import com.sweaterbank.leasing.car.model.Roles;
 import com.sweaterbank.leasing.car.model.User;
 import com.sweaterbank.leasing.car.model.UserLease;
+import com.sweaterbank.leasing.car.model.enums.Role;
 import com.sweaterbank.leasing.car.repository.LeaseRepository;
 import com.sweaterbank.leasing.car.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String getUserRole(User user) {
-        String role = Roles.USER.toString();
+        String role = Role.USER.toString();
         Optional<? extends GrantedAuthority> optionalAuthority = user.getAuthorities().stream().findFirst();
         if (optionalAuthority.isPresent()) {
             role = optionalAuthority.get().getAuthority();

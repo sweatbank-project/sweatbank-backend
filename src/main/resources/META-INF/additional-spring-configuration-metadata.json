@@ -13,6 +13,14 @@
       "name": "sweatbank-backend.expiration-time-ms",
       "type": "java.lang.Integer",
       "description": "The allowed origin from which request can be made. Used for CORS configuration."
+    },
+    {
+      "name": "sweatbank-backend.reply-email",
+      "type": "java.lang.String"
+    },
+    {
+      "name": "sweatbank-backend.reply-email-password",
+      "type": "java.lang.String"
     }
   ] 
 }

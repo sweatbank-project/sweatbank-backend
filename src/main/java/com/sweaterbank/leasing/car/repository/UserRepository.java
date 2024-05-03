@@ -1,8 +1,9 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.RegisterRequest;
-import com.sweaterbank.leasing.car.model.Roles;
+import com.fasterxml.uuid.Generators;
+import com.sweaterbank.leasing.car.controller.dto.requests.RegisterRequest;
 import com.sweaterbank.leasing.car.model.User;
+import com.sweaterbank.leasing.car.model.enums.Role;
 import com.sweaterbank.leasing.car.repository.contants.Queries;
 import com.sweaterbank.leasing.car.repository.mappers.UserMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public class UserRepository implements UserRepositoryInterface {
@@ -50,7 +50,7 @@ public class UserRepository implements UserRepositoryInterface {
 
     @Override
     public void saveUser(RegisterRequest request) {
-        String generatedUUID = UUID.randomUUID().toString();
+        String generatedUUID = Generators.timeBasedEpochGenerator().generate().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
         Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
 
@@ -64,7 +64,7 @@ public class UserRepository implements UserRepositoryInterface {
                 .addValue("last_name", request.lastName())
                 .addValue("birth_date", request.birthDate())
                 .addValue("address", request.address())
-                .addValue("role", Roles.USER.toString())
+                .addValue("role", Role.USER.toString())
                 .addValue("account_expiration_date", expiredDate)
                 .addValue("account_locked", false)
                 .addValue("enabled", true);

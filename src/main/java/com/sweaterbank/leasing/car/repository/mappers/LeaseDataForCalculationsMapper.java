@@ -1,7 +1,7 @@
 package com.sweaterbank.leasing.car.repository.mappers;
 
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
-import com.sweaterbank.leasing.car.model.MaritalStatus;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

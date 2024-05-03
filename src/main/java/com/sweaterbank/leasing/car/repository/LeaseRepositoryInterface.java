@@ -1,12 +1,17 @@
 package com.sweaterbank.leasing.car.repository;
 
-import com.sweaterbank.leasing.car.controller.dto.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
-import com.sweaterbank.leasing.car.model.ApplicationStatus;
-import com.sweaterbank.leasing.car.model.AutomationStatus;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.MailData;
+import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
+import com.sweaterbank.leasing.car.model.User;
+import com.sweaterbank.leasing.car.repository.mappers.MailDataMapper;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface LeaseRepositoryInterface
 {
@@ -16,6 +21,9 @@ public interface LeaseRepositoryInterface
     String generateApplicationId();
     Collection<LeasingWithUserDetail> getAllLeasesWithUserDetails();
     void saveUserIdWithLeaseId(String userId, String leaseId);
-    Integer getAmountOfPendingLeases(String userId);
-    Integer getAmountOfNewLeases(String userId);
+    Optional<MailData> getDataForMail(String applicationId);
+    Integer getAmountOfPendingLeasesByUserId(String userId);
+    Integer getAmountOfNewLeasesByUserId(String userId);
+    Integer countingAllLeasesByStatus(String status);
+    Collection<LeaseDateWithCount> getLeaseDatesWithCount();
 }

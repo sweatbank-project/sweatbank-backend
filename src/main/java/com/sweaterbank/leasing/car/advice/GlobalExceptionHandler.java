@@ -1,7 +1,7 @@
 package com.sweaterbank.leasing.car.advice;
 
 import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
-import com.sweaterbank.leasing.car.exceptions.InvalidStatusException;
+import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
@@ -46,6 +46,14 @@ public class GlobalExceptionHandler {
         return handleExceptionInternal(ex, new ApiError(errors),
                 new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
+
+    @ExceptionHandler(MailDataNotFoundException.class)
+    public ResponseEntity<ApiError> handleMailDataNotFoundException(MailDataNotFoundException ex, WebRequest request){
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
   
     @ExceptionHandler(NotMatchingPasswordsException.class)
     public ResponseEntity<ApiError> handleNotMatchingPasswordsException(ValidationException ex,
@@ -75,19 +83,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 
-    @ExceptionHandler(InvalidStatusException.class)
-    public ResponseEntity<ApiError> handleInvalidStatusException(InvalidStatusException ex, WebRequest request) {
-        List<String> errors = Collections.singletonList(ex.getMessage());
-
-        return handleExceptionInternal(ex, new ApiError(errors),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ApiError> handleNoSuchElementException(NoSuchElementException ex, WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
 
         return handleExceptionInternal(ex, new ApiError(errors),
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

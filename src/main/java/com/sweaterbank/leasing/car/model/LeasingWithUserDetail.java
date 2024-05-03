@@ -1,6 +1,13 @@
 package com.sweaterbank.leasing.car.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sweaterbank.leasing.car.model.enums.ApplicationStatus;
+import com.sweaterbank.leasing.car.model.enums.AutomationStatus;
+import com.sweaterbank.leasing.car.model.enums.BusinessAreaType;
+import com.sweaterbank.leasing.car.model.enums.EducationType;
+import com.sweaterbank.leasing.car.model.enums.EuriborType;
+import com.sweaterbank.leasing.car.model.enums.HeldPositionType;
+import com.sweaterbank.leasing.car.model.enums.MaritalStatus;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -12,10 +19,10 @@ public record LeasingWithUserDetail(
         AutomationStatus automationStatus,
         String carBrand,
         String carModel,
-        int carManufactureYear,
+        Integer carManufactureYear,
         BigDecimal carCost,
         BigDecimal downPayment,
-        int leasingPeriod,
+        Integer leasingPeriod,
         String carSellerName,
         EducationType education,
         HeldPositionType heldPosition, // CAN BE NULL
@@ -23,9 +30,9 @@ public record LeasingWithUserDetail(
         String timeEmployed, // CAN BE NULL
         BusinessAreaType employerBusinessArea, // CAN BE NULL
         MaritalStatus maritalStatus,
-        int numberOfChildren,
+        Integer numberOfChildren,
         BigDecimal monthlyIncomeAfterTaxes,
-        int downPaymentPercentage,
+        Integer downPaymentPercentage,
         BigDecimal contractFee,
         EuriborType euriborType,
         BigDecimal euriborRate,

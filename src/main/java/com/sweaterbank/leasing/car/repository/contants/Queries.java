@@ -72,6 +72,7 @@ public class Queries
                        leasing.car_model,
                        leasing.manufacture_year,
                        leasing.car_cost,
+                       leasing.down_payment,
                        leasing.leasing_period,
                        leasing.car_seller_name,
                        leasing.education,
@@ -128,17 +129,28 @@ public class Queries
                 VALUES(:user_id, :lease_id)
             """;
 
-
     public static final String GET_LEASES_COUNT_QUERY =
             """
                 SELECT COUNT(application_id) FROM Leasing
             """;
 
     public static final String UPDATE_LEASE_QUERY =
-            """
+            """                                           
                 UPDATE Leasing
-                SET status = :status
-                WHERE id = :id
+                        SET
+                            status = :status,
+                            down_payment = :down_payment,
+                            down_payment_percentage = :down_payment_percentage,
+                            euribor_rate = :euribor_rate,
+                            euribor_type = :euribor_type,
+                            interest_rate = :interest_rate,
+                            leasing_period = :leasing_period,
+                            margin = :margin,
+                            monthly_payment = :monthly_payment
+                        WHERE
+                            leasing.application_id = :application_id
+                        AND
+                            EXISTS ( SELECT 1 FROM Leasing WHERE leasing.application_id = :application_id )
             """;
 
     public static final String GET_PENDING_STATUS_COUNT_BY_ID_QUERY =
@@ -147,6 +159,7 @@ public class Queries
                 INNER JOIN leasing ON user_leases.lease_id = leasing.id
                 WHERE leasing.status = 'pending' AND user_leases.user_id = :user_id
             """;
+
     public static final String GET_NEW_STATUS_COUNT_BY_ID_QUERY =
             """
                 SELECT COUNT(leasing.status) FROM user_leases
@@ -170,6 +183,22 @@ public class Queries
                 WHERE users.username = :username
             """;
 
+    public static final String GET_DATA_FOR_MAIL_QUERY =
+            """
+                SELECT
+                users.first_name,
+                users.last_name,
+                leasing.car_cost,
+                leasing.down_payment,
+                leasing.margin,
+                leasing.euribor_type,
+                leasing.leasing_period
+                FROM leasing
+                INNER JOIN user_leases ON user_leases.lease_id = leasing.id
+                INNER JOIN users ON user_leases.user_id = users.id
+                WHERE leasing.application_id = :application_id
+            """;
+
     public static final String GET_LEASE_BY_APPLICATION_ID =
             """
                 SELECT
@@ -182,5 +211,19 @@ public class Queries
                 LEFT JOIN Obligation ON leasing.id = Obligation.leasing_id
                 WHERE leasing.application_id = :application_id
                 GROUP BY leasing.id
+            """;
+
+    public static final String GET_COUNT_OF_ALL_APPLICATIONS_BY_STATUS_QUERY =
+            """
+                SELECT COUNT(leasing.status)
+                FROM leasing
+                WHERE leasing.status = :status
+            """;
+
+    public static final String GET_LEASE_DATES_AND_COUNT_QUERY =
+            """
+                SELECT leasing.creation_date::date, COUNT(leasing.creation_date::date) FROM leasing
+                WHERE leasing.creation_date::date BETWEEN CURRENT_DATE - 7 AND CURRENT_DATE
+                GROUP BY leasing.creation_date::date
             """;
 }
