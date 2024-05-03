@@ -148,7 +148,7 @@ public class Queries
                             margin = :margin,
                             monthly_payment = :monthly_payment
                         WHERE
-                            leasing.application_id = :application_id
+                            leasing.application_id = :application_id AND leasing.status != 'approved' AND leasing.status != 'rejected'
                         AND
                             EXISTS ( SELECT 1 FROM Leasing WHERE leasing.application_id = :application_id )
             """;
