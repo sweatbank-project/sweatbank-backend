@@ -19,7 +19,7 @@ public class UserLeaseMapper implements RowMapper<UserLease>
                 resultSet.getString("euribor_type"),
                 resultSet.getBigDecimal("euribor_rate"),
                 resultSet.getBigDecimal("monthly_payment"),
-                resultSet.getBigDecimal("car_cost")
+                resultSet.getBigDecimal("car_cost").subtract(resultSet.getBigDecimal("down_payment"))
         );
     }
 }

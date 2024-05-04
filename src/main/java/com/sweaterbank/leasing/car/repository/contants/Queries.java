@@ -177,6 +177,7 @@ public class Queries
                     leasing.euribor_rate,
                     leasing.monthly_payment,
                     leasing.car_cost,
+                    leasing.down_payment,
                     users.username FROM leasing
                 INNER JOIN user_leases ON user_leases.lease_id = leasing.id
                 INNER JOIN users ON users.id = user_leases.user_id
