@@ -18,6 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
 
 import java.nio.file.AccessDeniedException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -132,5 +133,13 @@ public class GlobalExceptionHandler {
 
         return handleExceptionInternal(ex, new ApiError(errors),
                 new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<ApiError> handleParseException(ParseException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ExceptionMessages.INTERNAL_ERROR_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }

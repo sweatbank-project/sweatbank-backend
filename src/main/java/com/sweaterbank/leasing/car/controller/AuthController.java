@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController
@@ -55,7 +57,7 @@ public class AuthController
     }
 
     @PostMapping("register")
-    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) throws AccountExistsException, NotMatchingPasswordsException
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest requestData) throws AccountExistsException, NotMatchingPasswordsException, ParseException
     {
         userService.createUser(requestData);
 

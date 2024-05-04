@@ -13,7 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Repository
@@ -49,10 +52,12 @@ public class UserRepository implements UserRepositoryInterface {
     }
 
     @Override
-    public void saveUser(RegisterRequest request) {
+    public void saveUser(RegisterRequest request) throws ParseException
+    {
         String generatedUUID = Generators.timeBasedEpochGenerator().generate().toString();
         String encodedPassword = passwordEncoder.encode(request.password());
         Timestamp expiredDate = Timestamp.valueOf(LocalDateTime.now());
+        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.birthDate());
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", generatedUUID)
@@ -62,7 +67,7 @@ public class UserRepository implements UserRepositoryInterface {
                 .addValue("password", encodedPassword)
                 .addValue("first_name", request.firstName())
                 .addValue("last_name", request.lastName())
-                .addValue("birth_date", request.birthDate())
+                .addValue("birth_date", birthDate)
                 .addValue("address", request.address())
                 .addValue("role", Role.USER.toString())
                 .addValue("account_expiration_date", expiredDate)
