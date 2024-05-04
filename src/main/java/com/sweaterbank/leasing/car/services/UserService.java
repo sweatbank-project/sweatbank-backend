@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void createUser(RegisterRequest requestData) throws HttpClientErrorException.BadRequest, AccountExistsException, NotMatchingPasswordsException
+    public void createUser(RegisterRequest requestData) throws HttpClientErrorException.BadRequest, AccountExistsException, NotMatchingPasswordsException, ParseException
     {
         Optional<User> user = userRepository.selectUserByEmail(requestData.username());
         if(user.isEmpty()){
