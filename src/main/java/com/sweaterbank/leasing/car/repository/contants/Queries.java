@@ -227,4 +227,11 @@ public class Queries
                 WHERE leasing.creation_date::date BETWEEN CURRENT_DATE - 7 AND CURRENT_DATE
                 GROUP BY leasing.creation_date::date
             """;
+
+    public static final String GET_APPLCIATION_STATUS_BY_ID =
+            """
+                SELECT leasing.status
+                FROM leasing
+                WHERE leasing.application_id = :application_id
+            """;
 }

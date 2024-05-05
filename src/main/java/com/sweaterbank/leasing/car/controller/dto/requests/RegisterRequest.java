@@ -28,6 +28,7 @@ public record RegisterRequest(
         @NotBlank
         @Size(min = 6, message = "The password must be at least 6 characters long")
         @NotNull(message = "Password may not be null")
+        @Pattern(regexp = "^[^\\s-]+$", message = "Password cannot contain spaces and dashes")
         String password,
         @NotEmpty
         @NotBlank

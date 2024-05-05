@@ -4,6 +4,7 @@ import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
+import com.sweaterbank.leasing.car.exceptions.UpdateStatusException;
 import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
 import com.sweaterbank.leasing.car.repository.contants.ExceptionMessages;
 import jakarta.validation.ValidationException;
@@ -141,5 +142,13 @@ public class GlobalExceptionHandler {
 
         return handleExceptionInternal(ex, new ApiError(errors),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(UpdateStatusException.class)
+    public ResponseEntity<ApiError> handleUpdateStatusException(UpdateStatusException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

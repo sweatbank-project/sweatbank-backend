@@ -5,6 +5,7 @@ import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
+import com.sweaterbank.leasing.car.exceptions.UpdateStatusException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
@@ -95,7 +96,13 @@ public class LeaseService
         return leaseRepository.getAllLeasesWithUserDetails();
     }
 
-    public void updateLease(UpdateLeaseRequest requestData) {
+    public void updateLease(UpdateLeaseRequest requestData) throws UpdateStatusException {
+        String status = leaseRepository.getApplicationStatusById(requestData.applicationId());
+
+        if(status == null || status.equalsIgnoreCase("approved") || (status.equalsIgnoreCase("rejected"))) {
+            throw new UpdateStatusException();
+        }
+
         leaseRepository.updateLease(requestData);
     }
 

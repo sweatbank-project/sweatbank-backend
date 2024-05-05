@@ -99,7 +99,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
                 .addValue("creation_date",creationDate)
                 .addValue("down_payment_percentage", requestData.downPaymentPercentage())
                 .addValue("contract_fee", requestData.contractFee())
-                .addValue("euribor_type", requestData.euriborType())
+                .addValue("euribor_type", EuriborType.fromString(requestData.euriborType()).toString())
                 .addValue("euribor_rate", requestData.euriborRate())
                 .addValue("margin", requestData.margin())
                 .addValue("interest_rate", requestData.interestRate())
@@ -309,5 +309,12 @@ public class LeaseRepository implements LeaseRepositoryInterface
         return namedParameterJdbcTemplate.query(Queries.GET_LEASE_BY_APPLICATION_ID, params, leaseDataForCalculationsMapper)
                 .stream()
                 .findFirst();
+    }
+
+    public String getApplicationStatusById(String applicationId) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("application_id", applicationId);
+
+        return namedParameterJdbcTemplate.queryForObject(Queries.GET_APPLCIATION_STATUS_BY_ID, params, String.class);
     }
 }

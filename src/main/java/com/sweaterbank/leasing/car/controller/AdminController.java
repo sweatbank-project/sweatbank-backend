@@ -8,6 +8,7 @@ import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.CalculationResponse;
 import com.sweaterbank.leasing.car.controller.dto.responses.GetLeasesWithUserDetailsResponse;
 import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
+import com.sweaterbank.leasing.car.exceptions.UpdateStatusException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.services.CalculationService;
@@ -50,7 +51,7 @@ public class AdminController {
 
     @PutMapping("leases/update-lease")
     @ResponseStatus(HttpStatus.CREATED)
-    public void update(@Valid @RequestBody UpdateLeaseRequest requestData) {
+    public void update(@Valid @RequestBody UpdateLeaseRequest requestData) throws UpdateStatusException {
         leaseService.updateLease(requestData);
     }
 
