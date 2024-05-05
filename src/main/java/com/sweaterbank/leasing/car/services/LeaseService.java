@@ -4,7 +4,9 @@ import com.fasterxml.uuid.Generators;
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
 import com.sweaterbank.leasing.car.controller.dto.responses.DashboardResponse;
 import com.sweaterbank.leasing.car.controller.dto.requests.UpdateLeaseRequest;
+import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
+import com.sweaterbank.leasing.car.exceptions.UpdateStatusException;
 import com.sweaterbank.leasing.car.model.LeaseDataForCalculations;
 import com.sweaterbank.leasing.car.model.LeasingWithUserDetail;
 import com.sweaterbank.leasing.car.model.LeaseDateWithCount;
@@ -27,19 +29,21 @@ public class LeaseService
     private final LeaseRepository leaseRepository;
     private final UserService userService;
     private final CalculationService calculationService;
+    private final MailSenderService mailService;
     private final BigDecimal APPROVE_MAX_CAR_COST = new BigDecimal(55000);
     private final BigDecimal APPROVE_DOWN_PAYMENT_LOWER_BOUND = new BigDecimal(10);
     private final BigDecimal APPROVE_DOWN_PAYMENT_UPPER_BOUND = new BigDecimal(60);
     private final BigDecimal MAX_LOAN_SERVICE_RATE = new BigDecimal(40);
 
-    public LeaseService(LeaseRepository leaseRepository, UserService userService, CalculationService calculationService)
+    public LeaseService(LeaseRepository leaseRepository, UserService userService, CalculationService calculationService, MailSenderService mailService)
     {
         this.leaseRepository = leaseRepository;
         this.userService = userService;
         this.calculationService = calculationService;
+        this.mailService = mailService;
     }
 
-    public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException{
+    public void createLease(CreateLeaseRequest requestData, String email) throws PendingLeasesException, MailDataNotFoundException {
         String userId = userService.getUserIdByUsername(email);
         if(leaseRepository.getAmountOfPendingLeasesByUserId(userId) == 0 && leaseRepository.getAmountOfNewLeasesByUserId(userId) == 0){
             String leaseId = Generators.timeBasedEpochGenerator().generate().toString();
@@ -48,8 +52,17 @@ public class LeaseService
             AutomationStatus automationStatus = applicationStatus == ApplicationStatus.NEW ? AutomationStatus.MANUAL
                     : AutomationStatus.AUTOMATED;
 
-            leaseRepository.createLease(requestData, leaseId, applicationStatus, automationStatus);
+            String applicationId = leaseRepository.createLease(requestData, leaseId, applicationStatus, automationStatus);
             leaseRepository.saveUserIdWithLeaseId(userId, leaseId);
+
+            if(applicationStatus.toString().equals("approved")){
+                mailService.sendApprovedEmail(email, applicationId);
+            }
+
+            if(applicationStatus.toString().equals("rejected")){
+                mailService.sendRejectEmail(email, applicationId);
+            }
+
         } else {
             throw new PendingLeasesException();
         }
@@ -57,6 +70,17 @@ public class LeaseService
 
     public ApplicationStatus automatedDecision(CreateLeaseRequest request)
     {
+        HeldPositionType heldPosition = HeldPositionType.fromString(request.positionHeld().toUpperCase());
+        if (heldPosition == HeldPositionType.STUDENT ||
+                heldPosition == HeldPositionType.UNEMPLOYED) {
+            return ApplicationStatus.REJECTED;
+        }
+
+        BigDecimal loanServiceRate = calculationService.getServiceLoanRateForNewLease(request);
+        if (loanServiceRate.compareTo(MAX_LOAN_SERVICE_RATE) >= 0) {
+            return ApplicationStatus.REJECTED;
+        }
+
         if (request.costOfTheVehicle().compareTo(APPROVE_MAX_CAR_COST) > 0) {
             return ApplicationStatus.NEW;
         }
@@ -72,20 +96,9 @@ public class LeaseService
             return ApplicationStatus.NEW;
         }
 
-        HeldPositionType heldPosition = HeldPositionType.fromString(request.positionHeld().toUpperCase());
-        if (heldPosition == HeldPositionType.STUDENT ||
-            heldPosition == HeldPositionType.UNEMPLOYED) {
-            return ApplicationStatus.REJECTED;
-        }
-
         int timeEmployed = Integer.parseInt(request.timeEmployed());
         if (timeEmployed <= 1) {
             return ApplicationStatus.NEW;
-        }
-
-        BigDecimal loanServiceRate = calculationService.getServiceLoanRateForNewLease(request);
-        if (loanServiceRate.compareTo(MAX_LOAN_SERVICE_RATE) >= 0) {
-            return ApplicationStatus.REJECTED;
         }
 
         return ApplicationStatus.APPROVED;
@@ -95,7 +108,13 @@ public class LeaseService
         return leaseRepository.getAllLeasesWithUserDetails();
     }
 
-    public void updateLease(UpdateLeaseRequest requestData) {
+    public void updateLease(UpdateLeaseRequest requestData) throws UpdateStatusException {
+        String status = leaseRepository.getApplicationStatusById(requestData.applicationId());
+
+        if(status == null || status.equalsIgnoreCase("approved") || (status.equalsIgnoreCase("rejected"))) {
+            throw new UpdateStatusException();
+        }
+
         leaseRepository.updateLease(requestData);
     }
 

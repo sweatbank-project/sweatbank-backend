@@ -4,7 +4,9 @@ import com.sweaterbank.leasing.car.exceptions.AccountExistsException;
 import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.NotMatchingPasswordsException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
+import com.sweaterbank.leasing.car.exceptions.UpdateStatusException;
 import com.sweaterbank.leasing.car.exceptions.UserNotFoundException;
+import com.sweaterbank.leasing.car.repository.contants.ExceptionMessages;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
 
+import java.nio.file.AccessDeniedException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -93,6 +98,54 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleBaseException(Exception ex, WebRequest request) {
+        List<String> errors = List.of(ExceptionMessages.INTERNAL_ERROR_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ApiError> handleNullPointerException(NullPointerException ex, WebRequest request) {
+        List<String> errors = List.of(ExceptionMessages.INTERNAL_ERROR_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<ApiError> handleNumberFormatException(NumberFormatException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ExceptionMessages.NUMBER_FORMAT_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ExceptionMessages.ACCESS_DENIED_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<ApiError> handleParseException(ParseException ex, WebRequest request) {
+        List<String> errors = Collections.singletonList(ExceptionMessages.INTERNAL_ERROR_MESSAGE);
+
+        return handleExceptionInternal(ex, new ApiError(errors),
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(UpdateStatusException.class)
+    public ResponseEntity<ApiError> handleUpdateStatusException(UpdateStatusException ex, WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
 
         return handleExceptionInternal(ex, new ApiError(errors),

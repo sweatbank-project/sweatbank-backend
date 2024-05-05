@@ -148,7 +148,7 @@ public class Queries
                             margin = :margin,
                             monthly_payment = :monthly_payment
                         WHERE
-                            leasing.application_id = :application_id
+                            leasing.application_id = :application_id AND leasing.status != 'approved' AND leasing.status != 'rejected'
                         AND
                             EXISTS ( SELECT 1 FROM Leasing WHERE leasing.application_id = :application_id )
             """;
@@ -177,6 +177,7 @@ public class Queries
                     leasing.euribor_rate,
                     leasing.monthly_payment,
                     leasing.car_cost,
+                    leasing.down_payment,
                     users.username FROM leasing
                 INNER JOIN user_leases ON user_leases.lease_id = leasing.id
                 INNER JOIN users ON users.id = user_leases.user_id
@@ -225,5 +226,12 @@ public class Queries
                 SELECT leasing.creation_date::date, COUNT(leasing.creation_date::date) FROM leasing
                 WHERE leasing.creation_date::date BETWEEN CURRENT_DATE - 7 AND CURRENT_DATE
                 GROUP BY leasing.creation_date::date
+            """;
+
+    public static final String GET_APPLCIATION_STATUS_BY_ID =
+            """
+                SELECT leasing.status
+                FROM leasing
+                WHERE leasing.application_id = :application_id
             """;
 }
