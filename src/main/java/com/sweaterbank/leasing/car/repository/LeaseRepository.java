@@ -70,7 +70,7 @@ public class LeaseRepository implements LeaseRepositoryInterface
     }
 
     @Override
-    public void createLease(CreateLeaseRequest requestData, String leaseId, ApplicationStatus applicationStatus,
+    public String createLease(CreateLeaseRequest requestData, String leaseId, ApplicationStatus applicationStatus,
                             AutomationStatus automationStatus) {
 
         String leaseApplicationId = generateApplicationId();
@@ -108,6 +108,8 @@ public class LeaseRepository implements LeaseRepositoryInterface
         namedParameterJdbcTemplate.update(Queries.SAVE_LEASING_QUERY, leasingParams);
 
         createObligations(requestData, leaseId);
+
+        return leaseApplicationId;
     }
 
     @Override
