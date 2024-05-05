@@ -1,6 +1,7 @@
 package com.sweaterbank.leasing.car.controller;
 
 import com.sweaterbank.leasing.car.controller.dto.requests.CreateLeaseRequest;
+import com.sweaterbank.leasing.car.exceptions.MailDataNotFoundException;
 import com.sweaterbank.leasing.car.exceptions.PendingLeasesException;
 import com.sweaterbank.leasing.car.services.LeaseService;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class CarLeaseController
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@Valid @RequestBody CreateLeaseRequest requestData, Principal principal) throws PendingLeasesException{
+    public void create(@Valid @RequestBody CreateLeaseRequest requestData, Principal principal) throws PendingLeasesException, MailDataNotFoundException {
         String email = principal.getName();
         leaseService.createLease(requestData, email);
     }
